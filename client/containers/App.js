@@ -18,6 +18,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Constants   from '../constants/Constants';
 
+import Companies from './Companies';
+
 import Header from '../components/Header';
 
 import {
@@ -38,6 +40,7 @@ class StockInsights extends Component {
     return (
       <div className="stock-insights">
         <Header strings={strings} />
+        <Companies />
       </div>
     );
   }
