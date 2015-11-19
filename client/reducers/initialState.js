@@ -29,10 +29,6 @@ if (symbols && symbols.length) {
   companies = companies ? JSON.parse(companies) : [];
 }
 
-/** @type {Array} The companies that are selected. Initialized blank unless passed in via URL */
-var selectedCompanies = /[&?]articles=([^&]+)/.exec(location.href);
-selectedCompanies = (selectedCompanies && selectedCompanies[1].split(',')) || [];
-
 /** @type {string} can force a language by specifying it in the url */
 var language = /[&?]language=([^&]+)/.exec(location.href);
 language = language && language[1];
@@ -52,7 +48,7 @@ export default {
   forceBubbles: forcebubbles,
   strings: {},
   currentDate: moment(),
-  selectedCompanies: selectedCompanies,
+  selectedCompanies: [],
   companies: {
     condensed: false,
     companies: companies
