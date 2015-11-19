@@ -19,8 +19,7 @@ import { connect }       from 'react-redux'
 import classNames        from 'classnames';
 import Constants         from '../constants/Constants';
 
-// get our inline-able svg
-import IBMsvg from '../IBM.svg';
+import Header from '../components/Header';
 
 import {
   addCompany,
@@ -47,16 +46,11 @@ class StockInsights extends Component {
    */
   render() {
     // injected by connect call
-    var {dispatch, isEmbedded, language, forceBubbles, strings, currentDate, potentialCompanies,
-      companies, entities, stockData, selectedCompanies, articles, tweets} = this.props;
-  
+    var {dispatch, strings} = this.props;
+
     return (
       <div className="stock-insights">
-        <div className="stock-insights-title">
-          <div className="da-logo" dangerouslySetInnerHTML={{__html: IBMsvg}}></div>
-          <h1 className="stock-insights-title">{strings.stockInsights}</h1>
-          <a href="https://bluemix.net" target="_blank">{strings.built}</a>
-        </div>
+        <Header strings={strings} />
       </div>
     );
   }
@@ -75,8 +69,15 @@ class StockInsights extends Component {
   }
 };
 
-// for now, we want it all! and maybe forever honestly, iuno
-var select = state => state;
+StockInsights.propTypes = {
+  strings: PropTypes.object.isRequired,
+  companies: PropTypes.object.isRequired
+}
+
+var select = state => ({
+  strings: state.strings,
+  companies: state.companies
+});
 
 // Wrap the component to inject dispatch and state into it
 export default connect(select)(StockInsights)
