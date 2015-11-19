@@ -22,7 +22,6 @@ import configureStore from './store/configureStore';
 // load our css. there probably is a better way to do this
 // but for now this is our move
 require('./styles/style.less');
-require('./styles/slider.less');
 
 
 let store = configureStore();
