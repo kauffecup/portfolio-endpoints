@@ -33,19 +33,8 @@ if (symbols && symbols.length) {
 var language = /[&?]language=([^&]+)/.exec(location.href);
 language = language && language[1];
 
-/** @type {boolean} if we want to see the articles and the stock color bubbles */
-var forcebubbles = /[&?]forcebubbles=([^&]+)/.exec(location.href);
-forcebubbles = forcebubbles && (forcebubbles[1] === 'true' || forcebubbles[1] === '1');
-
-/** let the hackery commence, if there are symbols specified and forcebubbles is true,
-  * select all of them by default */
-if (forcebubbles && companies.length) {
-  selectedCompanies = companies.map(c => c.symbol || c);
-}
-
 export default {
   language: language,
-  forceBubbles: forcebubbles,
   strings: {},
   currentDate: moment(),
   selectedCompanies: [],
