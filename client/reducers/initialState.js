@@ -38,10 +38,7 @@ export default {
   strings: {},
   currentDate: moment(),
   selectedCompanies: [],
-  companies: {
-    condensed: false,
-    companies: companies
-  },
+  companies: companies,
   potentialCompanies: {
     status: Constants.POTENTIAL_STATUS_CLEAR,
     companies: []

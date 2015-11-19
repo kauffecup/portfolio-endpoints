@@ -66,21 +66,11 @@ function flattenStockData(stockData) {
 
 export default function reduce (state = initialState, action) {
   switch(action.type) {
-    case Constants.TOGGLE_CONDENSED_COMPANIES:
-      return assign({}, state, {
-        companies: assign({}, state.companies, {
-          condensed: !state.companies.condensed
-        })
-      });
-      break;
-
     case Constants.ADD_COMPANY:
       var newCompanies = [...state.companies.companies, action.company];
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
-        companies: assign({}, state.companies, {
-          companies: newCompanies
-        })
+        companies: newCompanies
       });
       break;
 
@@ -92,9 +82,7 @@ export default function reduce (state = initialState, action) {
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
         selectedCompanies: state.selectedCompanies.filter(c => c !== (action.company.symbol || action.company)),
-        companies: assign({}, state.companies, {
-          companies: newCompanies
-        }),
+        companies: newCompanies,
         stockData: assign({}, state.stockData, {
           map: stockDataMap,
           flat: flattenStockData(stockDataMap)

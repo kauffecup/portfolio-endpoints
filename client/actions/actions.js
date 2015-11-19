@@ -23,11 +23,6 @@ import {
   strings
 } from '../requester';
 
-/** Toggle the company condensed-ness */
-export function toggleCondensedCompanies() {
-  return { type: Constants.TOGGLE_CONDENSED_COMPANIES };
-}
-
 /** Change the date */
 export function setDate(date) {
   return { type: Constants.SWITCH_DATE, date: date };

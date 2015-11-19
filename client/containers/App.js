@@ -14,10 +14,9 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import React, { Component, PropTypes } from 'react'
-import { connect }       from 'react-redux'
-import classNames        from 'classnames';
-import Constants         from '../constants/Constants';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import Constants   from '../constants/Constants';
 
 import Header from '../components/Header';
 
@@ -50,8 +49,8 @@ class StockInsights extends Component {
     this.props.dispatch(getStrings(this.props.language));
     // if we already have companies, request the stock data to populate
     // our visualizations
-    if (this.props.companies.companies.length) {
-      var symbols = this.props.companies.companies.map(c => c.symbol)
+    if (this.props.companies.length) {
+      var symbols = this.props.companies.map(c => c.symbol)
       this.props.dispatch(getStockData(symbols));
     }
   }
@@ -59,7 +58,7 @@ class StockInsights extends Component {
 
 StockInsights.propTypes = {
   strings: PropTypes.object.isRequired,
-  companies: PropTypes.object.isRequired
+  companies: PropTypes.array.isRequired
 }
 
 var select = state => ({

@@ -34,7 +34,6 @@ export default keyMirror({
   NEWS_DATA: null,
   NEWS_ERROR: null,
   CLOSE_ARTICLE_LIST: null,
-  TOGGLE_CONDENSED_COMPANIES: null,
   SWITCH_DATE: null,
   STRING_DATA: null,
   CLOSE_TWEETS: null,
