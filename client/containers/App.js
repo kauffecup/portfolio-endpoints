@@ -22,19 +22,8 @@ import Constants         from '../constants/Constants';
 import Header from '../components/Header';
 
 import {
-  addCompany,
-  removeCompany,
-  toggleSelect,
-  toggleCondensedCompanies,
   getStrings,
-  setDate,
-  closeArticleList,
-  clearPotentialCompanies,
-  searchCompany,
-  getStockData,
-  getTweets,
-  closeTweets,
-  getSelectedNews
+  getStockData
 } from '../actions/actions';
 
 /**
@@ -42,11 +31,10 @@ import {
  */
 class StockInsights extends Component {
   /**
-   * Currently the app consists of a header and a CompanyContainer
    */
   render() {
     // injected by connect call
-    var {dispatch, strings} = this.props;
+    const {dispatch, strings} = this.props;
 
     return (
       <div className="stock-insights">
@@ -56,7 +44,7 @@ class StockInsights extends Component {
   }
 
   /**
-   * When mounting/unmounting add/remove change listeners to stores
+   * When we mount, load the strings and load our company data
    */
   componentDidMount() {
     this.props.dispatch(getStrings(this.props.language));

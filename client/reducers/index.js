@@ -76,7 +76,7 @@ export default function reduce (state = initialState, action) {
 
     case Constants.ADD_COMPANY:
       var newCompanies = [...state.companies.companies, action.company];
-      !state.isEmbedded && _updateLocalStorage(newCompanies);
+      _updateLocalStorage(newCompanies);
       return assign({}, state, {
         companies: assign({}, state.companies, {
           companies: newCompanies
@@ -89,7 +89,7 @@ export default function reduce (state = initialState, action) {
       var stockDataMap = clone(state.stockData.map);
       delete stockDataMap[symbol];
       var newCompanies = state.companies.companies.filter(c => c !== action.company);
-      !state.isEmbedded &&  _updateLocalStorage(newCompanies);
+      _updateLocalStorage(newCompanies);
       return assign({}, state, {
         selectedCompanies: state.selectedCompanies.filter(c => c !== (action.company.symbol || action.company)),
         companies: assign({}, state.companies, {

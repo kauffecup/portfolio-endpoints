@@ -20,11 +20,9 @@ import Constants from '../constants/Constants';
 /** Configure the companies either from the url or from local storage */
 var symbols = /[&?]symbols=([^&]+)/.exec(location.href);
 symbols = symbols && symbols[1].split(',');
-/** @type {Boolean} If we're running embedded or not. Right now determined by setting symbols in the URL */
-var isEmbedded = symbols && symbols.length;
 /** @type {Array.<Companies>} The array of companies initialized from url param or local storage */
 var companies;
-if (isEmbedded) {
+if (symbols && symbols.length) {
   companies = symbols.map(c => ({ symbol: c }) );
 } else {
   companies = localStorage.getItem(Constants.COMPANY_LOCAL_STORAGE);
@@ -50,7 +48,6 @@ if (forcebubbles && companies.length) {
 }
 
 export default {
-  isEmbedded: isEmbedded,
   language: language,
   forceBubbles: forcebubbles,
   strings: {},
