@@ -113,6 +113,22 @@ export default function reduce (state = initialState, action) {
       });
       break;
 
+    case Constants.SENTIMENT_HISTORY_LOADING:
+      var newObj = {};
+      newObj[action.symbol] = 'loading';
+      return assign({}, state, {
+        sentimentHistory: assign({}, state.sentimentHistory, newObj)
+      });
+      break;
+
+    case Constants.SENTIMENT_HISTORY_DATA:
+      var newObj = {};
+      newObj[action.symbol] = action.data;
+      return assign({}, state, {
+        sentimentHistory: assign({}, state.sentimentHistory, newObj)
+      });
+      break;
+
     case Constants.CLOSE_ARTICLE_LIST:
       return assign({}, state, {
         selectedCompanies: [],

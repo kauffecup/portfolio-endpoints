@@ -40,8 +40,20 @@ export function stockNews(symbols, language) {
   return _queryHelper('/stocknews', {symbol: symbols, language: language});
 }
 
+/**
+ * Hit the twitter endpoint with the proper query.
+ * Return a promise that resolves with the response.
+ */
 export function tweets(symbol, entity, language) {
   return _queryHelper('/tweets', {symbol: symbol, entity: entity, language: language});
+}
+
+/**
+ * Hit the sentiment history endpoint with the proper query.
+ * Return a promise that resolves with the response.
+ */
+export function sentimentHistory(symbols) {
+  return _queryHelper('/sentiment-history', {symbols: symbols});
 }
 
 /**

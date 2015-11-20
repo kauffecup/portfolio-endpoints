@@ -16,6 +16,7 @@
 
 import Constants from '../constants/Constants';
 import {
+  sentimentHistory,
   companyLookup,
   stockPrice,
   stockNews,
@@ -105,6 +106,16 @@ export function getStockData(symbols) {
     dispatch({ type: Constants.STOCK_PRICE_LOADING, symbols: symbols });
     stockPrice(symbols).then(data => {
       dispatch({ type: Constants.STOCK_PRICE_DATA, data: data });
+    });
+  }
+}
+
+/** Get the average sentiment history for a single company */
+export function getSentimentHistory(symbol) {
+  return dispatch => {
+    dispatch({ type: Constants.SENTIMENT_HISTORY_LOADING, symbol: symbol});
+    sentimentHistory(symbol).then(data => {
+      dispatch({ type: Constants.SENTIMENT_HISTORY_DATA, data: data, symbol: symbol });
     });
   }
 }

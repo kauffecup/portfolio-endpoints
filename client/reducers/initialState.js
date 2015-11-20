@@ -48,6 +48,7 @@ export default {
     entities: []
   },
   stockData: {},
+  sentimentHistory: {},
   articles: {
     loading: false,
     articles:[]

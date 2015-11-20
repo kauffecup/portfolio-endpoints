@@ -161,7 +161,7 @@ router.get('/sentiment-history', (req, res) => {
   // step 1: populate our start and end times for the last 30 days
   var thirtyDays = [];
   var start = moment().startOf('day').subtract(30, 'day').unix()*1000
-  for (var i = 29; i >= 0; i--) {
+  for (var i = 30; i >= 0; i--) {
     thirtyDays.push({
       start: moment().startOf('day').subtract(i, 'day').unix()*1000,
       end: moment().startOf('day').subtract(i-1, 'day').unix()*1000 - 1
@@ -171,7 +171,7 @@ router.get('/sentiment-history', (req, res) => {
   // step 2: make our request for the top 100 entities for each of those days
   Promise.map(thirtyDays, se =>
     request.getAsync({url: url + '/news/find', json: true, qs: {
-      symbol: symbol,
+      symbol: symbols,
       start: se.start,
       end: se.end,
       alimit: 0,
@@ -187,7 +187,7 @@ router.get('/sentiment-history', (req, res) => {
     }), {count: 0, sentiment: 0});
     return {
       sentiment: r.sentiment / r.count,
-      date: moment(thirtyDays[i].start).format('MM-DD-YYYY')
+      date: moment(thirtyDays[i].start).format('YYYY-MM-DD')
     };
   // step 4: return either the array of fun objects or an error to the client
   }).then(a => res.json(a)).catch(e => {

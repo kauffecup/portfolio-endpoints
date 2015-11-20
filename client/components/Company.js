@@ -21,20 +21,45 @@ const DRAW_TIME = 400;
 
 export default class Company extends Component {
   render() {
-    const {symbol, description, data, strings} = this.props;
+    const {symbol, description, data, strings, onClick, sentimentHistory} = this.props;
+    var myStockData = this.formatStockData();
+    const sentimentLoading = sentimentHistory === 'loading';
+
+    var series = 'symbol';
+    var mySentimentData = [];
+    if (!sentimentLoading) {
+      mySentimentData = this.formatSentimentData();
+    }
+
     return (
-      <div className="company">
+      <div className="company" onClick={onClick}>
         <span className="avatar">
           <div className="symbol">{symbol}</div>
           <div className="description">{description}</div>
         </span>
-        {data.length ? <LineGraph data={data.map(d => ({
-          symbol: symbol,
-          date: d.date,
-          last: d.last
-        }))} /> : strings.loading}
+        {data.length ? <LineGraph
+          stockData={myStockData}
+          sentimentData={mySentimentData}
+          series={series} />
+        : strings.loading}
       </div>
     );
+  }
+
+  formatStockData() {
+    return this.props.data.map(d => ({
+      symbol: this.props.symbol,
+      date: d.date,
+      last: d.last
+    }));
+  }
+
+  formatSentimentData() {
+    return this.props.sentimentHistory.map(d => ({
+      mattDamon: 'Sentiment',
+      date: d.date,
+      sentiment: d.sentiment
+    }));
   }
 }
 
@@ -42,5 +67,10 @@ Company.propTypes = {
   symbol: PropTypes.string.isRequired,
   description: PropTypes.string,
   data: PropTypes.array.isRequired,
-  strings: PropTypes.object.isRequired
+  strings: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  sentimentHistory: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.array
+  ]).isRequired
 }

@@ -17,11 +17,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Constants   from '../constants/Constants';
-
+// fellow containers
 import Companies from './Companies';
-
+// dumb components
 import Header from '../components/Header';
-
+// actions
 import {
   getStrings,
   getStockData
@@ -48,11 +48,12 @@ class StockInsights extends Component {
    */
   componentDidMount() {
     this.props.dispatch(getStrings(this.props.language));
-    // if we already have companies, request the stock data to populate
-    // our visualizations
+    // if we already have companies, request the stock data and
+    // sentiment history to populate our visualizations
+    const { dispatch } = this.props;
     if (this.props.companies.length) {
-      var symbols = this.props.companies.map(c => c.symbol)
-      this.props.dispatch(getStockData(symbols));
+      const symbols = this.props.companies.map(c => c.symbol)
+      dispatch(getStockData(symbols));
     }
   }
 };

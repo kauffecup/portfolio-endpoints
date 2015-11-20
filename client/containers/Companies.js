@@ -20,12 +20,16 @@ import clone from 'clone';
 
 import Company from '../components/Company';
 
+import {
+  getSentimentHistory
+} from '../actions/actions';
+
 class Companies extends Component {
   render() {
     const {dispatch, strings, companies} = this.props;
     return (
       <ul className="companies">{companies.map(c =>
-        <Company key={c.symbol} {...c} strings={strings} />
+        <Company key={c.symbol} {...c} strings={strings} onClick={() => dispatch(getSentimentHistory(c.symbol))}/>
       )}</ul>
     );
   }
@@ -40,13 +44,15 @@ Companies.propTypes = {
  * Here we're gonna select what state we want for this container.
  * We're gonna do a little bit of magic... we want both the strings
  * and the companies. But we're gonna add the stock data (which is
- * maintained in a separate state object) into our array of companies
+ * maintained in a separate state object) and the sentiment history
+ * into our array of companies
  */
 var select = state => {
   var myCompanies = [];
   state.companies.map(c => {
     let myC = clone(c);
     myC.data = state.stockData[c.symbol] || [];
+    myC.sentimentHistory = state.sentimentHistory[c.symbol] || [];
     myCompanies.push(myC);
   });
   return {
