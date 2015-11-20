@@ -19,6 +19,7 @@ import path         from 'path';
 import Promise      from 'bluebird';
 import gaas         from 'gaas';
 import locale       from 'locale';
+import moment       from 'moment';
 import vcapServices from './vcapServices';
 
 var router = express.Router();
@@ -34,8 +35,8 @@ var supportedLocales = new locale.Locales([
 var stringCache = {};
 router.get('/strings', (req, res) => {
   // if a language is specified in the request, prioritize that
-  var locales = new locale.Locales(req.headers['accept-language']);
-  var langCode = req.query.language || locales.best(supportedLocales).code;
+  const locales = new locale.Locales(req.headers['accept-language']);
+  const langCode = req.query.language || locales.best(supportedLocales).code;
   // first we check our cache - if there return immediately
   if (stringCache[langCode]) {
     res.json(stringCache[langCode]);
@@ -57,30 +58,30 @@ router.get('/strings', (req, res) => {
 
 /* Company Lookup. query takes company */
 router.get('/companylookup', (req, res) => {
-  var company = req.query.company;
-  var {client_id, client_secret, url} = vcapServices.companyLookup.credentials;
+  const company = req.query.company;
+  const {client_id, client_secret, url} = vcapServices.companyLookup.credentials;
   return _doGet(url + '/markets/find', {client_id: client_id, name: company}, res);
 });
 
 /* Stock News. query takes symbol */
 router.get('/stocknews', (req, res) => {
   // if a language is specified in the request, prioritize that
-  var locales = new locale.Locales(req.headers['accept-language']);
-  var langCode = req.query.language || locales.best(supportedLocales).code;
-  var symbol = req.query.symbol;
-  var {client_id, client_secret, url} = vcapServices.stockNews.credentials;
+  const locales = new locale.Locales(req.headers['accept-language']);
+  const langCode = req.query.language || locales.best(supportedLocales).code;
+  const symbol = req.query.symbol;
+  const {client_id, client_secret, url} = vcapServices.stockNews.credentials;
   return _doGet(url + '/news/find', {client_id: client_id, symbol: symbol, language: langCode}, res);
 });
 
 /* Stock Price. query takes symbols */
 router.get('/stockprice', (req, res) => {
-  var symbols = req.query.symbols;
+  const symbols = req.query.symbols;
 
-  var {client_id: client_id1, client_secret: client_secret1, url: url1} = vcapServices.stockPrice.credentials;
-  var {client_id: client_id2, client_secret: client_secret2, url: url2} = vcapServices.stockHistory.credentials;
+  const {client_id: client_id1, client_secret: client_secret1, url: url1} = vcapServices.stockPrice.credentials;
+  const {client_id: client_id2, client_secret: client_secret2, url: url2} = vcapServices.stockHistory.credentials;
 
-  var pricePromise   = request.getAsync({url: url1 + '/markets/quote',   qs: {client_id: client_id1, symbols: symbols}, json: true});
-  var historyPromise = request.getAsync({url: url2 + '/markets/history', qs: {client_id: client_id2, symbols: symbols}, json: true});
+  const pricePromise   = request.getAsync({url: url1 + '/markets/quote',   qs: {client_id: client_id1, symbols: symbols}, json: true});
+  const historyPromise = request.getAsync({url: url2 + '/markets/history', qs: {client_id: client_id2, symbols: symbols}, json: true});
 
   Promise.join(pricePromise, historyPromise, ([pR, pB], [hR, hB]) => {
     // build a map of symbol -> price objects
@@ -127,17 +128,17 @@ router.get('/stockprice', (req, res) => {
 /* Get tweets and sentiment about an entity and topic */
 router.get('/tweets', (req, res) => {
   // if a language is specified in the request, prioritize that
-  var locales = new locale.Locales(req.headers['accept-language']);
-  var langCode = req.query.language || locales.best(supportedLocales).code;
+  const locales = new locale.Locales(req.headers['accept-language']);
+  const langCode = req.query.language || locales.best(supportedLocales).code;
   // proceed with business as usual
-  var symbols = req.query.symbol || req.query.symbols;
-  var entity = req.query.entity;
+  const symbols = req.query.symbol || req.query.symbols;
+  const entity = req.query.entity;
 
   // issue requests for the tweets and the sentiment
-  var {client_id: client_id1, client_secret: client_secret1, url: url1} = vcapServices.stockTweets.credentials;
-  var {client_id: client_id2, client_secret: client_secret2, url: url2} = vcapServices.stockSentiment.credentials;
-  var tweetProm = request.getAsync({url: url1 + '/twitter/find',   qs: {client_id: client_id1, symbol: symbols, entity: entity, language: langCode}, json: true});
-  var sentProm  = request.getAsync({url: url2 + '/sentiment/find', qs: {client_id: client_id2, symbol: symbols, entity: entity}, json: true});
+  const {client_id: client_id1, client_secret: client_secret1, url: url1} = vcapServices.stockTweets.credentials;
+  const {client_id: client_id2, client_secret: client_secret2, url: url2} = vcapServices.stockSentiment.credentials;
+  const tweetProm = request.getAsync({url: url1 + '/twitter/find',   qs: {client_id: client_id1, symbol: symbols, entity: entity, language: langCode}, json: true});
+  const sentProm  = request.getAsync({url: url2 + '/sentiment/find', qs: {client_id: client_id2, symbol: symbols, entity: entity}, json: true});
 
   // only return one object
   Promise.join(tweetProm, sentProm, ([tR, tB], [sR, sB]) => {
@@ -149,6 +150,50 @@ router.get('/tweets', (req, res) => {
     console.error(e);
     res.status(500);
     res.json(e);
+  });
+});
+
+/* For a given symbol get the average sentiment for each day for the last 30d. */
+router.get('/sentiment-history', (req, res) => {
+  const symbols = req.query.symbol || req.query.symbols;
+  const {client_id, client_secret, url} = vcapServices.stockNews.credentials;
+
+  // step 1: populate our start and end times for the last 30 days
+  var thirtyDays = [];
+  var start = moment().startOf('day').subtract(30, 'day').unix()*1000
+  for (var i = 29; i >= 0; i--) {
+    thirtyDays.push({
+      start: moment().startOf('day').subtract(i, 'day').unix()*1000,
+      end: moment().startOf('day').subtract(i-1, 'day').unix()*1000 - 1
+    });
+  }
+
+  // step 2: make our request for the top 100 entities for each of those days
+  Promise.map(thirtyDays, se =>
+    request.getAsync({url: url + '/news/find', json: true, qs: {
+      symbol: symbol,
+      start: se.start,
+      end: se.end,
+      alimit: 0,
+      elimit: 100,
+      client_id: client_id
+    }})
+  // step 3: average the sentiment over all of our entities and format them
+  // into an object with the sentiment and date
+  ).map(([response, {entities}], i) => {
+    var r = entities.reduce((prev, cur) => ({
+      count: prev.count + cur.count,
+      sentiment: prev.sentiment + (cur.count * cur.averageSentiment)
+    }), {count: 0, sentiment: 0});
+    return {
+      sentiment: r.sentiment / r.count,
+      date: moment(thirtyDays[i].start).format('MM-DD-YYYY')
+    };
+  // step 4: return either the array of fun objects or an error to the client
+  }).then(a => res.json(a)).catch(e => {
+    console.error(e);
+    res.status(500);
+    res.json(e)
   });
 });
 
