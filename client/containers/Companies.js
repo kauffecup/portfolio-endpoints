@@ -24,8 +24,8 @@ class Companies extends Component {
   render() {
     const {dispatch, strings, companies} = this.props;
     return (
-      <ul className="companies">{companies.map(({symbol, description, data}) =>
-        <Company key={symbol} symbol={symbol} description={description} data={data} />
+      <ul className="companies">{companies.map(c =>
+        <Company key={c.symbol} {...c} />
       )}</ul>
     );
   }
@@ -36,17 +36,23 @@ Companies.propTypes = {
   companies: PropTypes.array.isRequired
 }
 
+/**
+ * Here we're gonna select what state we want for this container.
+ * We're gonna do a little bit of magic... we want both the strings
+ * and the companies. But we're gonna add the stock data (which is
+ * maintained in a separate state object) into our array of companies
+ */
 var select = state => {
   var myCompanies = [];
   state.companies.map(c => {
     let myC = clone(c);
     myC.data = state.stockData.map[c.symbol] || [];
     myCompanies.push(myC);
-  })
+  });
   return {
     strings: state.strings,
     companies: myCompanies
-  }
+  };
 };
 
 // Wrap the component to inject dispatch and state into it
