@@ -25,7 +25,7 @@ class Companies extends Component {
     const {dispatch, strings, companies} = this.props;
     return (
       <ul className="companies">{companies.map(c =>
-        <Company key={c.symbol} {...c} />
+        <Company key={c.symbol} {...c} strings={strings} />
       )}</ul>
     );
   }

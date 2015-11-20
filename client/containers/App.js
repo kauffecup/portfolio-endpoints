@@ -31,8 +31,6 @@ import {
  * The app entry point
  */
 class StockInsights extends Component {
-  /**
-   */
   render() {
     // injected by connect call
     const {dispatch, strings} = this.props;
