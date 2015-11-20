@@ -27,43 +27,6 @@ function _updateLocalStorage (companies) {
   localStorage.setItem(Constants.COMPANY_LOCAL_STORAGE, JSON.stringify(companies));
 }
 
-/**
- * Return the contents of our _stockData map as one flattened array
- * sorted by date containing objects with a date property and data array.
- */
-function flattenStockData(stockData) {
-  var stockDateArray = [];
-  for (var symbol in stockData) {
-    var dateArr = stockData[symbol];
-    if (stockDateArray.length) {
-      for (var i = 0; i < dateArr.length; i++) {
-        var d = dateArr[i];
-        stockDateArray[i].data.push({
-          week_52_high: d.week_52_high,
-          week_52_low: d.week_52_low,
-          change: d.change,
-          symbol: d.symbol,
-          last: d.last,
-          date: moment(d.date)
-        });
-      }
-    } else {
-      stockDateArray = dateArr.map(d => ({
-        date: moment(d.date),
-        data: [{
-          week_52_high: d.week_52_high,
-          week_52_low: d.week_52_low,
-          change: d.change,
-          symbol: d.symbol,
-          last: d.last,
-          date: moment(d.date)
-        }]
-      }))
-    }
-  }
-  return stockDateArray;
-}
-
 export default function reduce (state = initialState, action) {
   switch(action.type) {
     case Constants.ADD_COMPANY:
@@ -76,17 +39,14 @@ export default function reduce (state = initialState, action) {
 
     case Constants.REMOVE_COMPANY:
       var symbol = action.company.symbol || action.company;
-      var stockDataMap = clone(state.stockData.map);
+      var stockDataMap = clone(state.stockData);
       delete stockDataMap[symbol];
       var newCompanies = state.companies.companies.filter(c => c !== action.company);
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
         selectedCompanies: state.selectedCompanies.filter(c => c !== (action.company.symbol || action.company)),
         companies: newCompanies,
-        stockData: assign({}, state.stockData, {
-          map: stockDataMap,
-          flat: flattenStockData(stockDataMap)
-        })
+        stockData: stockDataMap
       });
       break;
 
@@ -112,15 +72,12 @@ export default function reduce (state = initialState, action) {
       break;
 
     case Constants.STOCK_PRICE_DATA:
-      var stockDataMap = clone(state.stockData.map);
+      var stockDataMap = clone(state.stockData);
       for (var symbol in action.data) {
         stockDataMap[symbol] = action.data[symbol];
       }
       return assign({}, state, {
-        stockData: assign({}, state.stockData, {
-          map: stockDataMap,
-          flat: flattenStockData(stockDataMap)
-        })
+        stockData: stockDataMap
       })
       break;
 

@@ -47,10 +47,7 @@ export default {
     loading: false,
     entities: []
   },
-  stockData: {
-    map: {},
-    flat: []
-  },
+  stockData: {},
   articles: {
     loading: false,
     articles:[]

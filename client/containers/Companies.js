@@ -46,7 +46,7 @@ var select = state => {
   var myCompanies = [];
   state.companies.map(c => {
     let myC = clone(c);
-    myC.data = state.stockData.map[c.symbol] || [];
+    myC.data = state.stockData[c.symbol] || [];
     myCompanies.push(myC);
   });
   return {
