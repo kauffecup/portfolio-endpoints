@@ -21,9 +21,9 @@ export default class Header extends Component {
   render() {
     var {strings} = this.props;
     return (
-      <div className="stock-insights-title">
+      <div className="portfolio-insights-title">
         <div className="da-logo" dangerouslySetInnerHTML={{__html: IBMsvg}}></div>
-        <h1 className="stock-insights-title">{strings.stockInsights}</h1>
+        <h1 className="portfolio-insights-title">{strings.portfolioInsights}</h1>
         <a href="https://bluemix.net" target="_blank">{strings.built}</a>
       </div>
     );

@@ -30,13 +30,13 @@ import {
 /**
  * The app entry point
  */
-class StockInsights extends Component {
+class PortfolioInsights extends Component {
   render() {
     // injected by connect call
     const {dispatch, strings} = this.props;
 
     return (
-      <div className="stock-insights">
+      <div className="portfolio-insights">
         <Header strings={strings} />
         <Companies />
       </div>
@@ -58,7 +58,7 @@ class StockInsights extends Component {
   }
 };
 
-StockInsights.propTypes = {
+PortfolioInsights.propTypes = {
   strings: PropTypes.object.isRequired,
   companies: PropTypes.array.isRequired
 }
@@ -69,4 +69,4 @@ var select = state => ({
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect(select)(StockInsights)
+export default connect(select)(PortfolioInsights)
