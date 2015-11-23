@@ -158,6 +158,9 @@ router.get('/sentiment-history', (req, res) => {
   const symbols = req.query.symbol || req.query.symbols;
   const {client_id, client_secret, url} = vcapServices.stockNews.credentials;
 
+  var entities = {};
+  var sentiment = [];
+
   // step 1: populate our start and end times for the last 30 days
   var thirtyDays = [];
   var start = moment().startOf('day').subtract(30, 'day').unix()*1000
@@ -180,17 +183,22 @@ router.get('/sentiment-history', (req, res) => {
     }})
   // step 3: average the sentiment over all of our entities and format them
   // into an object with the sentiment and date
-  ).map(([response, {entities}], i) => {
-    var r = entities.reduce((prev, cur) => ({
+  ).map(([response, {entities: es}], i) => {
+    const date = moment(thirtyDays[i].start).format('YYYY-MM-DD');
+    entities[date] = es;
+    var r = es.reduce((prev, cur) => ({
       count: prev.count + cur.count,
       sentiment: prev.sentiment + (cur.count * cur.averageSentiment)
     }), {count: 0, sentiment: 0});
-    return {
+    sentiment.push({
       sentiment: r.sentiment / r.count,
-      date: moment(thirtyDays[i].start).format('YYYY-MM-DD')
-    };
+      date: date
+    });
   // step 4: return either the array of fun objects or an error to the client
-  }).then(a => res.json(a)).catch(e => {
+  }).then(a => res.json({
+    entities: entities,
+    sentiment: sentiment
+  })).catch(e => {
     console.error(e);
     res.status(500);
     res.json(e)

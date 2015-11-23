@@ -43,6 +43,11 @@ export function cancelEdit() {
   return { type: Constants.EDIT_CANCEL };
 }
 
+/* Select a symbol and date... to show it's entities */
+export function selectSymbolAndDate(symbol, date) {
+  return { type: Constants.SYMBOL_AND_DATE, symbol: symbol, date: date };
+}
+
 /** Search for companies */
 export function searchCompany(companyName) {
   return dispatch => {

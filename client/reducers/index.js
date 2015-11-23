@@ -41,15 +41,22 @@ export default function reduce (state = initialState, action) {
 
     case Constants.REMOVE_COMPANY:
       var symbol = action.company.symbol || action.company;
+      // remove stock data
       var stockDataMap = clone(state.stockData);
       delete stockDataMap[symbol];
+      // remove sentiment data
       var sentimentDataMap = clone(state.sentimentHistory);
       delete sentimentDataMap[symbol];
+      // remove entity data
+      var entityHistoryMap = clone(state.entityHistory);
+      delete entityHistoryMap[symbol];
+      // now remove company
       var newCompanies = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
         stockData: stockDataMap,
         sentimentHistory: sentimentDataMap,
+        entityHistory: entityHistoryMap,
         companies: assign({}, state.companies, {
           companies: newCompanies
         })
@@ -69,6 +76,13 @@ export default function reduce (state = initialState, action) {
         companies: assign({}, state.companies, {
           editing: false
         })
+      });
+      break;
+
+    case Constants.SYMBOL_AND_DATE:
+      return assign({}, state, {
+        selectedCompany: action.symbol,
+        selectedDate: action.date
       });
       break;
 
@@ -99,10 +113,12 @@ export default function reduce (state = initialState, action) {
       break;
 
     case Constants.SENTIMENT_HISTORY_DATA:
-      var newObj = {};
-      newObj[action.symbol] = action.data;
+      var newSentObj = {}, newEntityObj = {};
+      newSentObj[action.symbol] = action.data.sentiment;
+      newEntityObj[action.symbol] = action.data.entities;
       return assign({}, state, {
-        sentimentHistory: assign({}, state.sentimentHistory, newObj)
+        sentimentHistory: assign({}, state.sentimentHistory, newSentObj),
+        entityHistory: assign({}, state.entityHistory, newEntityObj)
       });
       break;
 

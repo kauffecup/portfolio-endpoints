@@ -22,19 +22,22 @@ import Company from '../components/Company';
 
 import {
   getSentimentHistory,
-  removeCompany
+  removeCompany,
+  selectSymbolAndDate
 } from '../actions/actions';
 
 class Companies extends Component {
   render() {
-    const {dispatch, strings, companies, editing} = this.props;
+    const { dispatch, strings, companies, editing, selectedDate } = this.props;
     return (
       <ul className="companies">{companies.map(c =>
         <Company key={c.symbol} {...c}
-        strings={strings}
-        editing={editing}
-        onClick={() => dispatch(getSentimentHistory(c.symbol))}
-        onRemove={() => dispatch(removeCompany(c))} />
+          strings={strings}
+          editing={editing}
+          selectedDate={selectedDate}
+          onSelectDate={d => dispatch(selectSymbolAndDate(c.symbol, d))}
+          onClick={() => dispatch(getSentimentHistory(c.symbol))}
+          onRemove={() => dispatch(removeCompany(c))} />
       )}</ul>
     );
   }
@@ -43,7 +46,8 @@ class Companies extends Component {
 Companies.propTypes = {
   strings: PropTypes.object.isRequired,
   companies: PropTypes.array.isRequired,
-  editing: PropTypes.bool.isRequired
+  editing: PropTypes.bool.isRequired,
+  selectedDate: PropTypes.string.isRequired
 }
 
 /**
@@ -59,12 +63,16 @@ var select = state => {
     let myC = clone(c);
     myC.data = state.stockData[c.symbol] || [];
     myC.sentimentHistory = state.sentimentHistory[c.symbol] || [];
+    myC.selected = state.selectedCompany === c.symbol;
+    myC.entities = (myC.selected && state.selectedDate && state.entityHistory[c.symbol]
+      && state.entityHistory[c.symbol][state.selectedDate]) || [];
     myCompanies.push(myC);
   });
   return {
     strings: state.strings,
     companies: myCompanies,
-    editing: state.companies.editing
+    editing: state.companies.editing,
+    selectedDate: state.selectedDate
   };
 };
 

@@ -15,18 +15,21 @@
 //------------------------------------------------------------------------------
 
 import React, { Component, PropTypes } from 'react';
-import classNames from 'classnames';
-import LineGraph  from './LineGraph';
-import Avatar     from './Avatar';
-import minusSvg   from '../svgs/minus.svg';
+import classNames        from 'classnames';
+import LineGraph         from './LineGraph';
+import Avatar            from './Avatar';
+import EntityBubbleChart from './EntityBubbleChart';
+import minusSvg          from '../svgs/minus.svg';
 
 const DRAW_TIME = 400;
 
 export default class Company extends Component {
   render() {
-    const {symbol, description, data, strings, onClick, sentimentHistory, editing} = this.props;
+    const { symbol, description, data, strings, onClick, sentimentHistory,
+      onSelectDate, editing, entities } = this.props;
     const myStockData = this.formatStockData();
     const sentimentLoading = sentimentHistory === 'loading';
+    console.log(entities);
 
     var series = 'symbol';
     var mySentimentData = [];
@@ -45,8 +48,9 @@ export default class Company extends Component {
           onClick={this.props.onRemove}></div>
         : null}
         <Avatar symbol={symbol} description={description} change={change} last={last} loading={loading} onClick={onClick} />
-        {data.length ? <LineGraph stockData={myStockData} sentimentData={mySentimentData} />
+        {data.length ? <LineGraph stockData={myStockData} sentimentData={mySentimentData} onSelectDate={onSelectDate} />
         : <span className="graph loading">{strings.loading}</span>}
+        {entities.length ? <EntityBubbleChart entities={entities} /> : null}
       </div>
     );
   }
@@ -75,6 +79,8 @@ Company.propTypes = {
   strings: PropTypes.object.isRequired,
   editing: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  entities: PropTypes.array,
   sentimentHistory: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.array

@@ -43,5 +43,7 @@ export default keyMirror({
   SENTIMENT_HISTORY_DATA: null,
 
   EDIT_ENTER: null,
-  EDIT_CANCEL: null
+  EDIT_CANCEL: null,
+
+  SYMBOL_AND_DATE: null
 });

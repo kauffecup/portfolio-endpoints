@@ -37,6 +37,7 @@ export default {
   language: language,
   strings: {},
   selectedCompany: null,
+  selectedDate: null,
   companies: {
     editing: false,
     companies: companies
@@ -46,5 +47,6 @@ export default {
     companies: []
   },
   stockData: {},
-  sentimentHistory: {}
+  sentimentHistory: {},
+  entityHistory: {}
 }

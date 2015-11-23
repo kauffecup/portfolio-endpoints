@@ -16,6 +16,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import dimple from 'dimple';
+import moment from 'moment';
 
 const DRAW_TIME = 400;
 
@@ -25,7 +26,8 @@ export default class LineGraph extends Component {
   }
 
   componentDidMount() {
-    var svg = dimple.newSvg(this.refs._graph, '100%', '100%');
+    const { stockData, sentimentData, onSelectDate } = this.props;
+    const svg = dimple.newSvg(this.refs._graph, '100%', '100%');
     this.lineChart = new dimple.chart(svg);
     this.lineChart.setBounds(30, 14, '100%,-40', '100%,-34');
 
@@ -44,6 +46,7 @@ export default class LineGraph extends Component {
     this.sentimentSeries = this.lineChart.addSeries('mattDamon', dimple.plot.line, [this.x, this.sentimentY]);
     this.sentimentSeries.data = this.props.sentimentData || [];
     this.sentimentSeries.lineMarkers = true;
+    this.sentimentSeries.addEventHandler('click', e => onSelectDate(moment(e.xValue).format('YYYY-MM-DD')));
 
     // initialize the legend
     this.legend = this.lineChart.addLegend(60, 5, '100%,-50', 20, "right");
@@ -72,5 +75,6 @@ export default class LineGraph extends Component {
 
 LineGraph.propTypes = {
   stockData: PropTypes.array.isRequired,
-  sentimentData: PropTypes.array
+  sentimentData: PropTypes.array,
+  onSelectDate: PropTypes.func.isRequired
 }
