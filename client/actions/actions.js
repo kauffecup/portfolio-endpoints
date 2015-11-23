@@ -81,8 +81,9 @@ export function addCompany(company) {
 }
 
 /** Get the globalized strings */
-export function getStrings(language) {
-  return dispatch => {
+export function getStrings() {
+  return (dispatch, getState) => {
+    var { language } = getState();
     strings(language).then(strings => {
       dispatch({ type: Constants.STRING_DATA, strings: strings });
     });
