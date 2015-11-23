@@ -15,8 +15,10 @@
 //------------------------------------------------------------------------------
 
 import React, { Component, PropTypes } from 'react';
-import LineGraph from './LineGraph';
-import minusSvg  from '../svgs/minus.svg';
+import classNames from 'classnames';
+import LineGraph  from './LineGraph';
+import Avatar     from './Avatar';
+import minusSvg   from '../svgs/minus.svg';
 
 const DRAW_TIME = 400;
 
@@ -32,20 +34,19 @@ export default class Company extends Component {
       mySentimentData = this.formatSentimentData();
     }
 
+    const loading = !data.length || sentimentLoading;
+    const change = data.length ? data[data.length - 1].change : null;
+    const last = data.length ? data[data.length - 1].last : null;
+
     return (
-      <div className="company" onClick={onClick}>
+      <div className="company">
         {editing ? <div className="remove"
           dangerouslySetInnerHTML={{__html: minusSvg}}
           onClick={this.props.onRemove}></div>
         : null}
-        <span className="avatar">
-          <div className="symbol">{symbol}</div>
-          <div className="description">{description}</div>
-        </span>
-        {data.length ? <LineGraph
-          stockData={myStockData}
-          sentimentData={mySentimentData} />
-        : strings.loading}
+        <Avatar symbol={symbol} description={description} change={change} last={last} loading={loading} onClick={onClick} />
+        {data.length ? <LineGraph stockData={myStockData} sentimentData={mySentimentData} />
+        : <span className="graph loading">{strings.loading}</span>}
       </div>
     );
   }
