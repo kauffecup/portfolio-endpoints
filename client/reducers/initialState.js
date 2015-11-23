@@ -36,27 +36,12 @@ language = language && language[1];
 export default {
   language: language,
   strings: {},
-  currentDate: moment(),
-  selectedCompanies: [],
+  selectedCompany: null,
   companies: companies,
   potentialCompanies: {
     status: Constants.POTENTIAL_STATUS_CLEAR,
     companies: []
   },
-  entities: {
-    loading: false,
-    entities: []
-  },
   stockData: {},
-  sentimentHistory: {},
-  articles: {
-    loading: false,
-    articles:[]
-  },
-  tweets: {
-    open: false,
-    tweets: [],
-    sentiment: {},
-    description: {}
-  }
+  sentimentHistory: {}
 }

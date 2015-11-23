@@ -41,76 +41,33 @@ export default function reduce (state = initialState, action) {
       var symbol = action.company.symbol || action.company;
       var stockDataMap = clone(state.stockData);
       delete stockDataMap[symbol];
+      var sentimentDataMap = clone(state.sentimentHistory);
+      delete sentimentDataMap[symbol];
       var newCompanies = state.companies.companies.filter(c => c !== action.company);
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
-        selectedCompanies: state.selectedCompanies.filter(c => c !== (action.company.symbol || action.company)),
         companies: newCompanies,
-        stockData: stockDataMap
+        stockData: stockDataMap,
+        sentimentHistory: sentimentDataMap
       });
       break;
 
     case Constants.SELECT_COMPANY:
       return assign({}, state, {
-        selectedCompanies: [...state.selectedCompanies, action.symbol]
+        selectedCompany: action.symbol
       });
       break;
 
     case Constants.DESELECT_COMPANY:
-      var newCompanies = state.selectedCompanies.filter(c => c !== action.symbol);
-      var newArticles = newCompanies.length ? state.articles.articles : [];
-      var newEntities = newCompanies.length ? state.entities.entities : [];
       return assign({}, state, {
-        selectedCompanies: state.selectedCompanies.filter(c => c !== action.symbol),
-        articles: assign({}, state.articles, {
-          articles: newArticles
-        }),
-        entities: assign({}, state.entities, {
-          entities: newEntities
-        })
+        selectedCompany: null
       });
       break;
 
     case Constants.STOCK_PRICE_DATA:
-      var stockDataMap = clone(state.stockData);
-      for (var symbol in action.data) {
-        stockDataMap[symbol] = action.data[symbol];
-      }
       return assign({}, state, {
-        stockData: stockDataMap
+        stockData: assign({}, state.stockData, action.data)
       })
-      break;
-
-    case Constants.SWITCH_DATE:
-      return assign({}, state, {
-        currentDate: action.date
-      });
-      break;
-
-    case Constants.NEWS_LOADING:
-      return assign({}, state, {
-        articles: assign({}, state.articles, {
-          loading: true
-        })
-      });
-      break;
-
-    case Constants.NEWS_DATA:
-      return assign({}, state, {
-        articles: assign({}, state.articles, {
-          loading: false,
-          articles: action.news.articles
-        }),
-        entities: assign({}, state.entities, {
-          loading: false,
-          entities: action.news.entities.map(e => ({
-            _id: e.text,
-            value: e.count,
-            colorValue: e.averageSentiment,
-            symbols: e.symbols
-          }))
-        })
-      });
       break;
 
     case Constants.SENTIMENT_HISTORY_LOADING:
@@ -126,20 +83,6 @@ export default function reduce (state = initialState, action) {
       newObj[action.symbol] = action.data;
       return assign({}, state, {
         sentimentHistory: assign({}, state.sentimentHistory, newObj)
-      });
-      break;
-
-    case Constants.CLOSE_ARTICLE_LIST:
-      return assign({}, state, {
-        selectedCompanies: [],
-        articles: assign({}, state.articles, {
-          loading: false,
-          articles: []
-        }),
-        entities: assign({}, state.entities, {
-          loading: false,
-          entities: []
-        })
       });
       break;
 
@@ -169,53 +112,10 @@ export default function reduce (state = initialState, action) {
       });
       break;
 
-    case Constants.TWEETS_LOADING:
-      return assign({}, state, {
-        tweets: assign({}, state.tweets, {
-          open: true,
-          tweets: [],
-          sentiment: {},
-          description: {
-            symbols: action.symbols,
-            entity: action.entity
-          }
-        })
-      });
-      break;
-
-    case Constants.TWEETS_DATA:
-      if (state.tweets.open) {
-        var tweets = action.data.tweets;
-        return assign({}, state, {
-          tweets: assign({}, state.tweets, {
-            tweets: typeof tweets.length === 'undefined' ? [] : tweets,
-            sentiment: action.data.sentiment
-          })
-        });
-      } else {
-        return state;
-      }
-      break;
-
-    case Constants.CLOSE_TWEETS:
-      if (state.tweets.open) {
-        return assign({}, state, {
-          tweets: assign({}, state.tweets, {
-            open: false,
-            tweets: [],
-            sentiment: {},
-            description: {}
-          })
-        });
-      } else {
-        return state;
-      }
-      break;
-
     case Constants.STRING_DATA:
       return assign({}, state, {
         strings: action.strings
-      })
+      });
       break;
 
     default:

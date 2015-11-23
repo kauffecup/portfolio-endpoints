@@ -33,15 +33,6 @@ export default keyMirror({
 
   STOCK_PRICE_LOADING: null,
   STOCK_PRICE_DATA: null,
-
-  NEWS_LOADING: null,
-  NEWS_DATA: null,
-  NEWS_ERROR: null,
-
-  CLOSE_ARTICLE_LIST: null,
-  CLOSE_TWEETS: null,
-
-  SWITCH_DATE: null,
   
   STRING_DATA: null,
 

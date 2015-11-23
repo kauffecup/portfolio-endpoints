@@ -24,24 +24,14 @@ import {
   strings
 } from '../requester';
 
-/** Change the date */
-export function setDate(date) {
-  return { type: Constants.SWITCH_DATE, date: date };
-}
-
-/** Close the article list */
-export function closeArticleList() {
-  return { type: Constants.CLOSE_ARTICLE_LIST };
-}
-
 /** Clear potential companies */
 export function clearPotentialCompanies() {
   return { type: Constants.CLEAR_POTENTIAL_COMPANIES };
 }
 
-/** Close the tweet window */
-export function closeTweets() {
-  return { type: Constants.CLOSE_TWEETS };
+/** Remove a company */
+export function removeCompany(company) {
+  return { type: Constants.REMOVE_COMPANY, company: company };
 }
 
 /** Search for companies */
@@ -58,14 +48,13 @@ export function searchCompany(companyName) {
 export function toggleSelect(symbol) {
   return (dispatch, getState) => {
     symbol = symbol.symbol || symbol._id || symbol;
-    var { selectedCompanies, language } = getState();
-    if (selectedCompanies.indexOf(symbol) === -1) {
-      dispatch({ type: Constants.SELECT_COMPANY, symbol: symbol });
+    var { selectedCompany } = getState();
+    if (selectedCompany === symbol) {
+      dispatch({ type: Constants.DESELECT_COMPANY });
     } else {
       dispatch({ type: Constants.DESELECT_COMPANY, symbol: symbol });
     }
-    selectedCompanies = getState().selectedCompanies;
-    _getNews(selectedCompanies, language, dispatch);
+    // todo: sentiment history?
   }
 }
 
@@ -79,15 +68,6 @@ export function addCompany(company) {
         dispatch({ type: Constants.STOCK_PRICE_DATA, data: data });
       });
     }
-  }
-}
-
-/** Remove a company */
-export function removeCompany(company) {
-  return (dispatch, getState) => {
-    dispatch({ type: Constants.REMOVE_COMPANY, company: company });
-    var { selectedCompanies, language } = getState();
-    _getNews(selectedCompanies, language, dispatch);
   }
 }
 
@@ -127,26 +107,6 @@ export function getTweets(symbols, entity) {
     dispatch({ type: Constants.TWEETS_LOADING, symbols: symbols, entity: entity });
     tweets(symbols, entity, language).then(data => {
       dispatch({ type: Constants.TWEETS_DATA, data: data });
-    });
-  }
-}
-
-/** Get the news for everything that's currently selected */
-export function getSelectedNews() {
-  return (dispatch, getState) => {
-    var { selectedCompanies, language } = getState();
-    _getNews(selectedCompanies, language, dispatch);
-  }
-}
-
-/** Helper method - fetch stock news for an array of companies */
-function _getNews(companies, language, dispatch) {
-  if (companies.length) {
-    dispatch({ type: Constants.NEWS_LOADING });
-    stockNews(companies, language).then(news => {
-      dispatch({ type: Constants.NEWS_DATA, news: news });
-    }).catch(e => {
-      dispatch({ type: Constants.NEWS_ERROR });
     });
   }
 }
