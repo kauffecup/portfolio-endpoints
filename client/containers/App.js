@@ -20,11 +20,15 @@ import Constants   from '../constants/Constants';
 // fellow containers
 import Companies from './Companies';
 // dumb components
-import Header from '../components/Header';
+import Header   from '../components/Header';
+import Searcher from '../components/Searcher';
 // actions
 import {
   getStrings,
-  getStockData
+  getStockData,
+  searchCompany,
+  clearPotentialCompanies,
+  addCompany
 } from '../actions/actions';
 
 /**
@@ -33,11 +37,18 @@ import {
 class PortfolioInsights extends Component {
   render() {
     // injected by connect call
-    const {dispatch, strings} = this.props;
+    const {dispatch, strings, potentialCompanies, companies} = this.props;
 
     return (
       <div className="portfolio-insights">
         <Header strings={strings} />
+        <Searcher strings={strings}
+          companies={companies}
+          potentialCompanies={potentialCompanies.companies}
+          loadingStatus={potentialCompanies.status}
+          onSearch={v => dispatch(searchCompany(v))}
+          onClear={() => dispatch(clearPotentialCompanies())}
+          onCompanyAdd={c => dispatch(addCompany(c))} />
         <Companies />
       </div>
     );
@@ -60,12 +71,14 @@ class PortfolioInsights extends Component {
 
 PortfolioInsights.propTypes = {
   strings: PropTypes.object.isRequired,
-  companies: PropTypes.array.isRequired
+  companies: PropTypes.array.isRequired,
+  potentialCompanies: PropTypes.object.isRequired
 }
 
 var select = state => ({
   strings: state.strings,
-  companies: state.companies
+  companies: state.companies,
+  potentialCompanies: state.potentialCompanies
 });
 
 // Wrap the component to inject dispatch and state into it

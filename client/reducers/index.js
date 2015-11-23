@@ -30,7 +30,7 @@ function _updateLocalStorage (companies) {
 export default function reduce (state = initialState, action) {
   switch(action.type) {
     case Constants.ADD_COMPANY:
-      var newCompanies = [...state.companies.companies, action.company];
+      var newCompanies = [action.company, ...state.companies];
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
         companies: newCompanies
