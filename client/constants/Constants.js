@@ -40,5 +40,8 @@ export default keyMirror({
   TWEETS_DATA: null,
 
   SENTIMENT_HISTORY_LOADING: null,
-  SENTIMENT_HISTORY_DATA: null
+  SENTIMENT_HISTORY_DATA: null,
+
+  EDIT_ENTER: null,
+  EDIT_CANCEL: null
 });

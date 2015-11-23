@@ -30,10 +30,12 @@ function _updateLocalStorage (companies) {
 export default function reduce (state = initialState, action) {
   switch(action.type) {
     case Constants.ADD_COMPANY:
-      var newCompanies = [action.company, ...state.companies];
+      var newCompanies = [action.company, ...state.companies.companies];
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
-        companies: newCompanies
+        companies: assign({}, state.companies, {
+          companies: newCompanies
+        })
       });
       break;
 
@@ -46,9 +48,27 @@ export default function reduce (state = initialState, action) {
       var newCompanies = state.companies.companies.filter(c => c !== action.company);
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
-        companies: newCompanies,
         stockData: stockDataMap,
-        sentimentHistory: sentimentDataMap
+        sentimentHistory: sentimentDataMap,
+        companies: assign({}, state.companies, {
+          companies: newCompanies
+        })
+      });
+      break;
+
+    case Constants.EDIT_ENTER:
+      return assign({}, state, {
+        companies: assign({}, state.companies, {
+          editing: true
+        })
+      });
+      break;
+
+    case Constants.EDIT_CANCEL:
+      return assign({}, state, {
+        companies: assign({}, state.companies, {
+          editing: false
+        })
       });
       break;
 

@@ -37,7 +37,10 @@ export default {
   language: language,
   strings: {},
   selectedCompany: null,
-  companies: companies,
+  companies: {
+    editing: false,
+    companies: companies
+  },
   potentialCompanies: {
     status: Constants.POTENTIAL_STATUS_CLEAR,
     companies: []

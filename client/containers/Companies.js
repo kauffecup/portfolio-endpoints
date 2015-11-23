@@ -49,7 +49,7 @@ Companies.propTypes = {
  */
 var select = state => {
   var myCompanies = [];
-  state.companies.map(c => {
+  state.companies.companies.map(c => {
     let myC = clone(c);
     myC.data = state.stockData[c.symbol] || [];
     myC.sentimentHistory = state.sentimentHistory[c.symbol] || [];

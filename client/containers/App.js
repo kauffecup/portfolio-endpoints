@@ -28,7 +28,9 @@ import {
   getStockData,
   searchCompany,
   clearPotentialCompanies,
-  addCompany
+  addCompany,
+  enterEdit,
+  cancelEdit
 } from '../actions/actions';
 
 /**
@@ -37,11 +39,14 @@ import {
 class PortfolioInsights extends Component {
   render() {
     // injected by connect call
-    const {dispatch, strings, potentialCompanies, companies} = this.props;
+    const {dispatch, strings, potentialCompanies, companies, editing} = this.props;
 
     return (
       <div className="portfolio-insights">
-        <Header strings={strings} />
+        <Header strings={strings}
+          editing={editing}
+          onEdit={() => dispatch(enterEdit())} 
+          onCancel={() => dispatch(cancelEdit())} />
         <Searcher strings={strings}
           companies={companies}
           potentialCompanies={potentialCompanies.companies}
@@ -77,7 +82,8 @@ PortfolioInsights.propTypes = {
 
 var select = state => ({
   strings: state.strings,
-  companies: state.companies,
+  companies: state.companies.companies,
+  editing: state.companies.editing,
   potentialCompanies: state.potentialCompanies
 });
 

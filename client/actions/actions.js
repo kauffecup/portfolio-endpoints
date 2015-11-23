@@ -34,6 +34,15 @@ export function removeCompany(company) {
   return { type: Constants.REMOVE_COMPANY, company: company };
 }
 
+/** Enter edit mode */
+export function enterEdit() {
+  return { type: Constants.EDIT_ENTER };
+}
+ /** Cancel edit mode */
+export function cancelEdit() {
+  return { type: Constants.EDIT_CANCEL };
+}
+
 /** Search for companies */
 export function searchCompany(companyName) {
   return dispatch => {

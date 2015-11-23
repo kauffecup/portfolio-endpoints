@@ -19,17 +19,22 @@ import IBMsvg from '../IBM.svg';
 
 export default class Header extends Component {
   render() {
-    var {strings} = this.props;
+    const {strings, editing, onEdit, onCancel} = this.props;
+    const linkString = editing ? strings.cancel : strings.edit;
+    const linkClick  = editing ? onCancel       : onEdit;
     return (
       <div className="portfolio-insights-title">
         <div className="da-logo" dangerouslySetInnerHTML={{__html: IBMsvg}}></div>
         <h1 className="portfolio-insights-title">{strings.portfolioInsights}</h1>
-        <a href="https://bluemix.net" target="_blank">{strings.built}</a>
+        <a href="javascript:void(0)" onClick={linkClick}>{linkString}</a>
       </div>
     );
   }
 }
 
 Header.propTypes = {
-  strings: PropTypes.object.isRequired
+  strings: PropTypes.object.isRequired,
+  editing: PropTypes.bool.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired
 }
