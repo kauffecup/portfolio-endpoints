@@ -21,15 +21,20 @@ import clone from 'clone';
 import Company from '../components/Company';
 
 import {
-  getSentimentHistory
+  getSentimentHistory,
+  removeCompany
 } from '../actions/actions';
 
 class Companies extends Component {
   render() {
-    const {dispatch, strings, companies} = this.props;
+    const {dispatch, strings, companies, editing} = this.props;
     return (
       <ul className="companies">{companies.map(c =>
-        <Company key={c.symbol} {...c} strings={strings} onClick={() => dispatch(getSentimentHistory(c.symbol))}/>
+        <Company key={c.symbol} {...c}
+        strings={strings}
+        editing={editing}
+        onClick={() => dispatch(getSentimentHistory(c.symbol))}
+        onRemove={() => dispatch(removeCompany(c))} />
       )}</ul>
     );
   }
@@ -37,7 +42,8 @@ class Companies extends Component {
 
 Companies.propTypes = {
   strings: PropTypes.object.isRequired,
-  companies: PropTypes.array.isRequired
+  companies: PropTypes.array.isRequired,
+  editing: PropTypes.bool.isRequired
 }
 
 /**
@@ -57,7 +63,8 @@ var select = state => {
   });
   return {
     strings: state.strings,
-    companies: myCompanies
+    companies: myCompanies,
+    editing: state.companies.editing
   };
 };
 

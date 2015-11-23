@@ -16,13 +16,14 @@
 
 import React, { Component, PropTypes } from 'react';
 import LineGraph from './LineGraph';
+import minusSvg  from '../svgs/minus.svg';
 
 const DRAW_TIME = 400;
 
 export default class Company extends Component {
   render() {
-    const {symbol, description, data, strings, onClick, sentimentHistory} = this.props;
-    var myStockData = this.formatStockData();
+    const {symbol, description, data, strings, onClick, sentimentHistory, editing} = this.props;
+    const myStockData = this.formatStockData();
     const sentimentLoading = sentimentHistory === 'loading';
 
     var series = 'symbol';
@@ -33,14 +34,17 @@ export default class Company extends Component {
 
     return (
       <div className="company" onClick={onClick}>
+        {editing ? <div className="remove"
+          dangerouslySetInnerHTML={{__html: minusSvg}}
+          onClick={this.props.onRemove}></div>
+        : null}
         <span className="avatar">
           <div className="symbol">{symbol}</div>
           <div className="description">{description}</div>
         </span>
         {data.length ? <LineGraph
           stockData={myStockData}
-          sentimentData={mySentimentData}
-          series={series} />
+          sentimentData={mySentimentData} />
         : strings.loading}
       </div>
     );
@@ -68,6 +72,7 @@ Company.propTypes = {
   description: PropTypes.string,
   data: PropTypes.array.isRequired,
   strings: PropTypes.object.isRequired,
+  editing: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   sentimentHistory: PropTypes.oneOfType([
     PropTypes.string,

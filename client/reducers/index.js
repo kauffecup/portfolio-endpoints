@@ -45,7 +45,7 @@ export default function reduce (state = initialState, action) {
       delete stockDataMap[symbol];
       var sentimentDataMap = clone(state.sentimentHistory);
       delete sentimentDataMap[symbol];
-      var newCompanies = state.companies.companies.filter(c => c !== action.company);
+      var newCompanies = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
       _updateLocalStorage(newCompanies);
       return assign({}, state, {
         stockData: stockDataMap,
