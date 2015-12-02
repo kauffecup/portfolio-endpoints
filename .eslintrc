@@ -5,5 +5,4 @@ rules:
   no-multi-spaces: 0
   no-script-url: 1
   no-use-before-define: [2, 'nofunc']
-  no-var: 0
   vars-on-top: 0

@@ -43,7 +43,7 @@ export default class Company extends Component {
     const myStockData = this.formatStockData();
     const sentimentLoading = sentimentHistory === 'loading';
 
-    var mySentimentData = [];
+    let mySentimentData = [];
     if (!sentimentLoading) {
       mySentimentData = this.formatSentimentData();
     }

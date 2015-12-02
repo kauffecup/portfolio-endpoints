@@ -60,9 +60,9 @@ export default class Searcher extends Component {
    * because clicking on the <li> removes it from the drop down.
    */
   handleClear(event) {
-    var notMyDom = !ReactDOM.findDOMNode(this).contains(event.target);
-    var notAComp = !event.target.classList.contains('potential-company');
-    var hasComps = this.props.potentialCompanies.length;
+    const notMyDom = !ReactDOM.findDOMNode(this).contains(event.target);
+    const notAComp = !event.target.classList.contains('potential-company');
+    const hasComps = this.props.potentialCompanies.length;
     if (notMyDom && notAComp && hasComps) {
       this.setState({value: ''});
       this.props.onClear();
@@ -83,7 +83,7 @@ export default class Searcher extends Component {
    * As the user's typing debounce a searchCompany call by 300ms.
    */
   handleChange(event) {
-    var value = event.target.value;
+    const value = event.target.value;
     this.setState({value: value});
     if (!value) {
       this.props.onClear();
@@ -103,8 +103,10 @@ export default class Searcher extends Component {
    * It's render time.
    */
   render() {
-    var { potentialCompanies, loadingStatus, companies } = this.props;
-    var { value } = this.state;
+    const { loadingStatus, companies } = this.props;
+    const { value } = this.state;
+    let { potentialCompanies } = this.props;
+
     // some potential companies magic. goes through these steps:
     // 1. filter out companies that match the current value. this allows us to immediately
     //    filter down the list as the user's typing and network requests may/may not be happening

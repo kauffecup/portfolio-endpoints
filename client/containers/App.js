@@ -82,7 +82,7 @@ PortfolioInsights.propTypes = {
   language: PropTypes.string.isRequired
 };
 
-var select = state => ({
+const select = state => ({
   strings: state.strings,
   companies: state.companies.companies,
   editing: state.companies.editing,

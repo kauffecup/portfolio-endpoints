@@ -58,8 +58,8 @@ Companies.propTypes = {
  * maintained in a separate state object) and the sentiment history
  * into our array of companies
  */
-var select = state => {
-  var myCompanies = [];
+const select = state => {
+  const myCompanies = [];
   state.companies.companies.map(c => {
     const myC = clone(c);
     myC.data = state.stockData[c.symbol] || [];

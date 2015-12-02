@@ -16,7 +16,7 @@
 
 import objectAssign from 'object-assign';
 
-var vcapServices;
+let vcapServices;
 // if running in Bluemix, use the environment variables
 if (process.env.VCAP_SERVICES) {
   vcapServices = JSON.parse(process.env.VCAP_SERVICES);
@@ -29,7 +29,7 @@ if (process.env.VCAP_SERVICES) {
   }
 }
 
-var envVars = {
+let envVars = {
   BYPASS_URL: process.env.BYPASS_URL,
   BYPASS_UN: process.env.BYPASS_UN,
   BYPASS_PW: process.env.BYPASS_PW
@@ -43,7 +43,7 @@ try {
 // the keys are complex, for example: `Company Lookup v1 : Sandbox 55e768c90cf2722940e66db9 prod`
 // iterate over the keys and convert to companyLookup, stockPrice, stockNews, stockHistory,
 // stockSentiment, globalization, and stockTweets, for easier use throughout the application
-for (var service in vcapServices) {
+for (const service in vcapServices) {
   if (service.indexOf('Company Lookup') > -1) {
     vcapServices.companyLookup = vcapServices[service][0];
     delete vcapServices[service];

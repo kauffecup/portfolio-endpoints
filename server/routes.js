@@ -21,17 +21,17 @@ import locale       from 'locale';
 import moment       from 'moment';
 import vcapServices from './vcapServices';
 
-var router = new express.Router();
-var gpClient = g11nPipeline.getClient({credentials: vcapServices.globalization.credentials});
-var gpStrings = Promise.promisifyAll(gpClient.bundle('stock_strings'));
-var request = Promise.promisifyAll(require('request'));
+const router = new express.Router();
+const gpClient = g11nPipeline.getClient({credentials: vcapServices.globalization.credentials});
+const gpStrings = Promise.promisifyAll(gpClient.bundle('stock_strings'));
+const request = Promise.promisifyAll(require('request'));
 
-var supportedLocales = new locale.Locales([
+const supportedLocales = new locale.Locales([
   'en', 'zh-Hant', 'zh-Hans', 'fr', 'de', 'it', 'ja', 'pt-br', 'es'
 ]);
 
 /* GET strings. */
-var stringCache = {};
+const stringCache = {};
 router.get('/strings', (req, res) => {
   // if a language is specified in the request, prioritize that
   const locales = new locale.Locales(req.headers['accept-language']);
@@ -84,20 +84,20 @@ router.get('/stockprice', (req, res) => {
 
   Promise.join(pricePromise, historyPromise, ([, pB], [, hB]) => {
     // build a map of symbol -> price objects
-    var priceMap = {};
+    const priceMap = {};
     for (const price of pB) {
       priceMap[price.symbol] = price;
     }
 
     // if all of the current change values are falsy, we'll want to use yesterday's
-    var usePreviousChangeValues = pB.every(p => !p.change);
+    const usePreviousChangeValues = pB.every(p => !p.change);
 
     // iterate over the history map and convert to expected data type
     // additionallyalally, add today's price values to the array in one nice
     // happy array family
-    for (var symbol in hB) {
+    for (const symbol in hB) {
       if (hB.hasOwnProperty(symbol)) {
-        var price = priceMap[symbol];
+        const price = priceMap[symbol];
         hB[symbol] = hB[symbol].map(h => ({
           change: h.close - h.open,
           symbol: symbol,
@@ -106,8 +106,8 @@ router.get('/stockprice', (req, res) => {
           week_52_high: price.week_52_high,
           week_52_low: price.week_52_low
         }));
-        var d = new Date();
-        var previousSymbol = hB[symbol][hB[symbol].length - 1];
+        const d = new Date();
+        const previousSymbol = hB[symbol][hB[symbol].length - 1];
         hB[symbol].push({
           change: usePreviousChangeValues ? previousSymbol.change : price.change,
           symbol: symbol,
@@ -159,11 +159,11 @@ router.get('/sentiment-history', (req, res) => {
   const symbols = req.query.symbol || req.query.symbols;
   const {client_id, url} = vcapServices.stockNews.credentials;
 
-  var entities = {};
-  var sentiment = [];
+  const entities = {};
+  const sentiment = [];
 
   // step 1: populate our start and end times for the last 30 days
-  var thirtyDays = [];
+  const thirtyDays = [];
   for (let i = 30; i >= 0; i--) {
     thirtyDays.push({
       start: moment().startOf('day').subtract(i, 'day').unix() * 1000,
@@ -186,7 +186,7 @@ router.get('/sentiment-history', (req, res) => {
   ).map(([response, {entities: es}], i) => {
     const date = moment(thirtyDays[i].start).format('YYYY-MM-DD');
     entities[date] = es;
-    var r = es.reduce((prev, cur) => ({
+    const r = es.reduce((prev, cur) => ({
       count: prev.count + cur.count,
       sentiment: prev.sentiment + (cur.count * cur.averageSentiment)
     }), {count: 0, sentiment: 0});

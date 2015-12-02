@@ -61,7 +61,7 @@ export function searchCompany(companyName) {
 export function toggleSelect(symbol) {
   const s = symbol.symbol || symbol._id || symbol;
   return (dispatch, getState) => {
-    var { selectedCompany } = getState();
+    const { selectedCompany } = getState();
     if (selectedCompany === s) {
       dispatch({ type: Constants.DESELECT_COMPANY });
     } else {
@@ -87,7 +87,7 @@ export function addCompany(company) {
 /** Get the globalized strings */
 export function getStrings() {
   return (dispatch, getState) => {
-    var { language } = getState();
+    const { language } = getState();
     strings(language).then(s => {
       dispatch({ type: Constants.STRING_DATA, strings: s });
     });
@@ -117,7 +117,7 @@ export function getSentimentHistory(symbol) {
 /** Get the most recent tweets about a symbol/entity combo */
 export function getTweets(symbols, entity) {
   return (dispatch, getState) => {
-    var { language } = getState();
+    const { language } = getState();
     dispatch({ type: Constants.TWEETS_LOADING, symbols: symbols, entity: entity });
     tweets(symbols, entity, language).then(data => {
       dispatch({ type: Constants.TWEETS_DATA, data: data });

@@ -60,8 +60,8 @@ export default class LineGraph extends Component {
   }
 
   updateAxis() {
-    var myDataNums = this.props.stockData.map(d => d.last);
-    var mySentimentNums = this.props.sentimentData.map(d => d.sentiment);
+    const myDataNums = this.props.stockData.map(d => d.last);
+    const mySentimentNums = this.props.sentimentData.map(d => d.sentiment);
     this.dataY.overrideMin = Math.min(...myDataNums);
     this.dataY.overrideMax = Math.max(...myDataNums);
     this.sentimentY.overrideMin = Math.min(...mySentimentNums);

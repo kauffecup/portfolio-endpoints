@@ -29,7 +29,7 @@ function _updateLocalStorage(companies) {
 export default function reduce(state = initialState, action) {
   switch (action.type) {
   case Constants.ADD_COMPANY:
-    var newCompanies = [action.company, ...state.companies.companies];
+    const newCompanies = [action.company, ...state.companies.companies];
     _updateLocalStorage(newCompanies);
     return assign({}, state, {
       companies: assign({}, state.companies, {
@@ -38,18 +38,18 @@ export default function reduce(state = initialState, action) {
     });
 
   case Constants.REMOVE_COMPANY:
-    var symbol = action.company.symbol || action.company;
+    const symbol = action.company.symbol || action.company;
     // remove stock data
-    var stockDataMap = clone(state.stockData);
+    const stockDataMap = clone(state.stockData);
     delete stockDataMap[symbol];
     // remove sentiment data
-    var sentimentDataMap = clone(state.sentimentHistory);
+    const sentimentDataMap = clone(state.sentimentHistory);
     delete sentimentDataMap[symbol];
     // remove entity data
-    var entityHistoryMap = clone(state.entityHistory);
+    const entityHistoryMap = clone(state.entityHistory);
     delete entityHistoryMap[symbol];
     // now remove company
-    var newCompaniess = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
+    const newCompaniess = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
     _updateLocalStorage(newCompanies);
     return assign({}, state, {
       stockData: stockDataMap,
@@ -96,15 +96,15 @@ export default function reduce(state = initialState, action) {
     });
 
   case Constants.SENTIMENT_HISTORY_LOADING:
-    var newObj = {};
+    const newObj = {};
     newObj[action.symbol] = 'loading';
     return assign({}, state, {
       sentimentHistory: assign({}, state.sentimentHistory, newObj)
     });
 
   case Constants.SENTIMENT_HISTORY_DATA:
-    var newSentObj = {};
-    var newEntityObj = {};
+    const newSentObj = {};
+    const newEntityObj = {};
     newSentObj[action.symbol] = action.data.sentiment;
     newEntityObj[action.symbol] = action.data.entities;
     return assign({}, state, {
