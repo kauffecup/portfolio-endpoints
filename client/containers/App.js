@@ -16,7 +16,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Constants   from '../constants/Constants';
 // fellow containers
 import Companies from './Companies';
 // dumb components
@@ -37,6 +36,20 @@ import {
  * The app entry point
  */
 class PortfolioInsights extends Component {
+  /**
+   * When we mount, load the strings and load our company data
+   */
+  componentDidMount() {
+    this.props.dispatch(getStrings(this.props.language));
+    // if we already have companies, request the stock data and
+    // sentiment history to populate our visualizations
+    const { dispatch } = this.props;
+    if (this.props.companies.length) {
+      const symbols = this.props.companies.map(c => c.symbol);
+      dispatch(getStockData(symbols));
+    }
+  }
+
   render() {
     // injected by connect call
     const {dispatch, strings, potentialCompanies, companies, editing} = this.props;
@@ -45,7 +58,7 @@ class PortfolioInsights extends Component {
       <div className="portfolio-insights">
         <Header strings={strings}
           editing={editing}
-          onEdit={() => dispatch(enterEdit())} 
+          onEdit={() => dispatch(enterEdit())}
           onCancel={() => dispatch(cancelEdit())} />
         <Searcher strings={strings}
           companies={companies}
@@ -58,27 +71,16 @@ class PortfolioInsights extends Component {
       </div>
     );
   }
-
-  /**
-   * When we mount, load the strings and load our company data
-   */
-  componentDidMount() {
-    this.props.dispatch(getStrings(this.props.language));
-    // if we already have companies, request the stock data and
-    // sentiment history to populate our visualizations
-    const { dispatch } = this.props;
-    if (this.props.companies.length) {
-      const symbols = this.props.companies.map(c => c.symbol)
-      dispatch(getStockData(symbols));
-    }
-  }
-};
+}
 
 PortfolioInsights.propTypes = {
+  editing: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
   strings: PropTypes.object.isRequired,
   companies: PropTypes.array.isRequired,
-  potentialCompanies: PropTypes.object.isRequired
-}
+  potentialCompanies: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
+};
 
 var select = state => ({
   strings: state.strings,
@@ -88,4 +90,4 @@ var select = state => ({
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect(select)(PortfolioInsights)
+export default connect(select)(PortfolioInsights);

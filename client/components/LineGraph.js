@@ -21,18 +21,14 @@ import moment from 'moment';
 const DRAW_TIME = 400;
 
 export default class LineGraph extends Component {
-  render() {
-    return <span className="graph" ref="_graph"></span>;
-  }
-
   componentDidMount() {
     const { stockData, sentimentData, onSelectDate } = this.props;
     const svg = dimple.newSvg(this.refs._graph, '100%', '100%');
-    this.lineChart = new dimple.chart(svg);
+    this.lineChart = new dimple.chart(svg); // eslint-disable-line
     this.lineChart.setBounds(30, 14, '100%,-40', '100%,-34');
 
     // intialize the axis
-    this.x = this.lineChart.addTimeAxis('x', 'date', "%Y-%m-%d", '%b %d');
+    this.x = this.lineChart.addTimeAxis('x', 'date', '%Y-%m-%d', '%b %d');
     this.dataY = this.lineChart.addMeasureAxis('y', 'last');
     this.dataY.ticks = 4;
     this.sentimentY = this.lineChart.addMeasureAxis('y', 'sentiment');
@@ -41,15 +37,15 @@ export default class LineGraph extends Component {
 
     // initialize the series lines
     this.dataSeries = this.lineChart.addSeries('symbol', dimple.plot.line, [this.x, this.dataY]);
-    this.dataSeries.data = this.props.stockData || [];
+    this.dataSeries.data = stockData || [];
     this.dataSeries.lineMarkers = true;
     this.sentimentSeries = this.lineChart.addSeries('mattDamon', dimple.plot.line, [this.x, this.sentimentY]);
-    this.sentimentSeries.data = this.props.sentimentData || [];
+    this.sentimentSeries.data = sentimentData || [];
     this.sentimentSeries.lineMarkers = true;
     this.sentimentSeries.addEventHandler('click', e => onSelectDate(moment(e.xValue).format('YYYY-MM-DD')));
 
     // initialize the legend
-    this.legend = this.lineChart.addLegend(60, 5, '100%,-50', 20, "right");
+    this.legend = this.lineChart.addLegend(60, 5, '100%,-50', 20, 'right');
 
     // lessss go
     this.lineChart.draw(DRAW_TIME);
@@ -71,10 +67,14 @@ export default class LineGraph extends Component {
     this.sentimentY.overrideMin = Math.min(...mySentimentNums);
     this.sentimentY.overrideMax = Math.max(...mySentimentNums);
   }
+
+  render() {
+    return <span className="graph" ref="_graph"></span>;
+  }
 }
 
 LineGraph.propTypes = {
   stockData: PropTypes.array.isRequired,
   sentimentData: PropTypes.array,
   onSelectDate: PropTypes.func.isRequired
-}
+};

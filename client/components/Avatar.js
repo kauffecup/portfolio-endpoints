@@ -46,4 +46,4 @@ Avatar.propTypes = {
   last: PropTypes.number,
   loading: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired
-}
+};

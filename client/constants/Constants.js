@@ -33,7 +33,7 @@ export default keyMirror({
 
   STOCK_PRICE_LOADING: null,
   STOCK_PRICE_DATA: null,
-  
+
   STRING_DATA: null,
 
   TWEETS_LOADING: null,

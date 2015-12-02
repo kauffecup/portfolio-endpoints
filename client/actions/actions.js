@@ -19,7 +19,6 @@ import {
   sentimentHistory,
   companyLookup,
   stockPrice,
-  stockNews,
   tweets,
   strings
 } from '../requester';
@@ -55,21 +54,21 @@ export function searchCompany(companyName) {
     companyLookup(companyName).then(companies => {
       dispatch({ type: Constants.COMPANY_DATA, companies: companies });
     });
-  }
+  };
 }
 
 /** Toggle a company's selected-ness */
 export function toggleSelect(symbol) {
+  const s = symbol.symbol || symbol._id || symbol;
   return (dispatch, getState) => {
-    symbol = symbol.symbol || symbol._id || symbol;
     var { selectedCompany } = getState();
-    if (selectedCompany === symbol) {
+    if (selectedCompany === s) {
       dispatch({ type: Constants.DESELECT_COMPANY });
     } else {
-      dispatch({ type: Constants.DESELECT_COMPANY, symbol: symbol });
+      dispatch({ type: Constants.DESELECT_COMPANY, symbol: s });
     }
     // todo: sentiment history?
-  }
+  };
 }
 
 /** Add a company */
@@ -82,17 +81,17 @@ export function addCompany(company) {
         dispatch({ type: Constants.STOCK_PRICE_DATA, data: data });
       });
     }
-  }
+  };
 }
 
 /** Get the globalized strings */
 export function getStrings() {
   return (dispatch, getState) => {
     var { language } = getState();
-    strings(language).then(strings => {
-      dispatch({ type: Constants.STRING_DATA, strings: strings });
+    strings(language).then(s => {
+      dispatch({ type: Constants.STRING_DATA, strings: s });
     });
-  }
+  };
 }
 
 /** Get the stock data for a given array of companies */
@@ -102,7 +101,7 @@ export function getStockData(symbols) {
     stockPrice(symbols).then(data => {
       dispatch({ type: Constants.STOCK_PRICE_DATA, data: data });
     });
-  }
+  };
 }
 
 /** Get the average sentiment history for a single company */
@@ -112,7 +111,7 @@ export function getSentimentHistory(symbol) {
     sentimentHistory(symbol).then(data => {
       dispatch({ type: Constants.SENTIMENT_HISTORY_DATA, data: data, symbol: symbol });
     });
-  }
+  };
 }
 
 /** Get the most recent tweets about a symbol/entity combo */
@@ -123,5 +122,5 @@ export function getTweets(symbols, entity) {
     tweets(symbols, entity, language).then(data => {
       dispatch({ type: Constants.TWEETS_DATA, data: data });
     });
-  }
+  };
 }

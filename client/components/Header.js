@@ -37,4 +37,4 @@ Header.propTypes = {
   editing: PropTypes.bool.isRequired,
   onEdit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired
-}
+};

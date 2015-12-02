@@ -14,7 +14,6 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import moment       from 'moment';
 import clone        from 'clone';
 import assign       from 'object-assign';
 import Constants    from '../constants/Constants';
@@ -23,139 +22,125 @@ import initialState from './initialState';
 /**
  * Helper method to store the companies in the browser's local storage
  */
-function _updateLocalStorage (companies) {
+function _updateLocalStorage(companies) {
   localStorage.setItem(Constants.COMPANY_LOCAL_STORAGE, JSON.stringify(companies));
 }
 
-export default function reduce (state = initialState, action) {
-  switch(action.type) {
-    case Constants.ADD_COMPANY:
-      var newCompanies = [action.company, ...state.companies.companies];
-      _updateLocalStorage(newCompanies);
-      return assign({}, state, {
-        companies: assign({}, state.companies, {
-          companies: newCompanies
-        })
-      });
-      break;
-
-    case Constants.REMOVE_COMPANY:
-      var symbol = action.company.symbol || action.company;
-      // remove stock data
-      var stockDataMap = clone(state.stockData);
-      delete stockDataMap[symbol];
-      // remove sentiment data
-      var sentimentDataMap = clone(state.sentimentHistory);
-      delete sentimentDataMap[symbol];
-      // remove entity data
-      var entityHistoryMap = clone(state.entityHistory);
-      delete entityHistoryMap[symbol];
-      // now remove company
-      var newCompanies = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
-      _updateLocalStorage(newCompanies);
-      return assign({}, state, {
-        stockData: stockDataMap,
-        sentimentHistory: sentimentDataMap,
-        entityHistory: entityHistoryMap,
-        companies: assign({}, state.companies, {
-          companies: newCompanies
-        })
-      });
-      break;
-
-    case Constants.EDIT_ENTER:
-      return assign({}, state, {
-        companies: assign({}, state.companies, {
-          editing: true
-        })
-      });
-      break;
-
-    case Constants.EDIT_CANCEL:
-      return assign({}, state, {
-        companies: assign({}, state.companies, {
-          editing: false
-        })
-      });
-      break;
-
-    case Constants.SYMBOL_AND_DATE:
-      return assign({}, state, {
-        selectedCompany: action.symbol,
-        selectedDate: action.date
-      });
-      break;
-
-    case Constants.SELECT_COMPANY:
-      return assign({}, state, {
-        selectedCompany: action.symbol
-      });
-      break;
-
-    case Constants.DESELECT_COMPANY:
-      return assign({}, state, {
-        selectedCompany: null
-      });
-      break;
-
-    case Constants.STOCK_PRICE_DATA:
-      return assign({}, state, {
-        stockData: assign({}, state.stockData, action.data)
+export default function reduce(state = initialState, action) {
+  switch (action.type) {
+  case Constants.ADD_COMPANY:
+    var newCompanies = [action.company, ...state.companies.companies];
+    _updateLocalStorage(newCompanies);
+    return assign({}, state, {
+      companies: assign({}, state.companies, {
+        companies: newCompanies
       })
-      break;
+    });
 
-    case Constants.SENTIMENT_HISTORY_LOADING:
-      var newObj = {};
-      newObj[action.symbol] = 'loading';
-      return assign({}, state, {
-        sentimentHistory: assign({}, state.sentimentHistory, newObj)
-      });
-      break;
+  case Constants.REMOVE_COMPANY:
+    var symbol = action.company.symbol || action.company;
+    // remove stock data
+    var stockDataMap = clone(state.stockData);
+    delete stockDataMap[symbol];
+    // remove sentiment data
+    var sentimentDataMap = clone(state.sentimentHistory);
+    delete sentimentDataMap[symbol];
+    // remove entity data
+    var entityHistoryMap = clone(state.entityHistory);
+    delete entityHistoryMap[symbol];
+    // now remove company
+    var newCompaniess = state.companies.companies.filter(c => c.symbol !== action.company.symbol);
+    _updateLocalStorage(newCompanies);
+    return assign({}, state, {
+      stockData: stockDataMap,
+      sentimentHistory: sentimentDataMap,
+      entityHistory: entityHistoryMap,
+      companies: assign({}, state.companies, {
+        companies: newCompaniess
+      })
+    });
 
-    case Constants.SENTIMENT_HISTORY_DATA:
-      var newSentObj = {}, newEntityObj = {};
-      newSentObj[action.symbol] = action.data.sentiment;
-      newEntityObj[action.symbol] = action.data.entities;
-      return assign({}, state, {
-        sentimentHistory: assign({}, state.sentimentHistory, newSentObj),
-        entityHistory: assign({}, state.entityHistory, newEntityObj)
-      });
-      break;
+  case Constants.EDIT_ENTER:
+    return assign({}, state, {
+      companies: assign({}, state.companies, {
+        editing: true
+      })
+    });
 
-    case Constants.COMPANIES_LOADING:
-      return assign({}, state, {
-        potentialCompanies: assign({}, state.potentialCompanies, {
-          status: Constants.POTENTIAL_STATUS_LOADING
-        })
-      });
-      break;
+  case Constants.EDIT_CANCEL:
+    return assign({}, state, {
+      companies: assign({}, state.companies, {
+        editing: false
+      })
+    });
 
-    case Constants.COMPANY_DATA:
-      return assign({}, state, {
-        potentialCompanies: assign({}, state.potentialCompanies, {
-          status: Constants.POTENTIAL_STATUS_RECEIVED,
-          companies: action.companies
-        })
-      });
-      break;
+  case Constants.SYMBOL_AND_DATE:
+    return assign({}, state, {
+      selectedCompany: action.symbol,
+      selectedDate: action.date
+    });
 
-    case Constants.CLEAR_POTENTIAL_COMPANIES:
-      return assign({}, state, {
-        potentialCompanies: assign({}, state.potentialCompanies, {
-          status: Constants.POTENTIAL_STATUS_CLEAR,
-          companies: []
-        })
-      });
-      break;
+  case Constants.SELECT_COMPANY:
+    return assign({}, state, {
+      selectedCompany: action.symbol
+    });
 
-    case Constants.STRING_DATA:
-      return assign({}, state, {
-        strings: action.strings
-      });
-      break;
+  case Constants.DESELECT_COMPANY:
+    return assign({}, state, {
+      selectedCompany: null
+    });
 
-    default:
-      return state;
-      break;
+  case Constants.STOCK_PRICE_DATA:
+    return assign({}, state, {
+      stockData: assign({}, state.stockData, action.data)
+    });
+
+  case Constants.SENTIMENT_HISTORY_LOADING:
+    var newObj = {};
+    newObj[action.symbol] = 'loading';
+    return assign({}, state, {
+      sentimentHistory: assign({}, state.sentimentHistory, newObj)
+    });
+
+  case Constants.SENTIMENT_HISTORY_DATA:
+    var newSentObj = {};
+    var newEntityObj = {};
+    newSentObj[action.symbol] = action.data.sentiment;
+    newEntityObj[action.symbol] = action.data.entities;
+    return assign({}, state, {
+      sentimentHistory: assign({}, state.sentimentHistory, newSentObj),
+      entityHistory: assign({}, state.entityHistory, newEntityObj)
+    });
+
+  case Constants.COMPANIES_LOADING:
+    return assign({}, state, {
+      potentialCompanies: assign({}, state.potentialCompanies, {
+        status: Constants.POTENTIAL_STATUS_LOADING
+      })
+    });
+
+  case Constants.COMPANY_DATA:
+    return assign({}, state, {
+      potentialCompanies: assign({}, state.potentialCompanies, {
+        status: Constants.POTENTIAL_STATUS_RECEIVED,
+        companies: action.companies
+      })
+    });
+
+  case Constants.CLEAR_POTENTIAL_COMPANIES:
+    return assign({}, state, {
+      potentialCompanies: assign({}, state.potentialCompanies, {
+        status: Constants.POTENTIAL_STATUS_CLEAR,
+        companies: []
+      })
+    });
+
+  case Constants.STRING_DATA:
+    return assign({}, state, {
+      strings: action.strings
+    });
+
+  default:
+    return state;
   }
 }

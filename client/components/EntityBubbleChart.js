@@ -19,31 +19,31 @@ import ReactBubbleChart  from 'react-bubble-chart';
 
 const legend = [
   // reds from dark to light
-  {color: "#67000d", textColor: '#fee0d2'},
-  {color: "#a50f15", textColor: '#fee0d2'},
-  "#cb181d",
-  "#ef3b2c",
-  "#fb6a4a",
-  "#fc9272",
-  "#fcbba1",
-  "#fee0d2",
-  //neutral grey
-  "#f0f0f0",
+  {color: '#67000d', textColor: '#fee0d2'},
+  {color: '#a50f15', textColor: '#fee0d2'},
+  '#cb181d',
+  '#ef3b2c',
+  '#fb6a4a',
+  '#fc9272',
+  '#fcbba1',
+  '#fee0d2',
+  // neutral grey
+  '#f0f0f0',
   // blues from light to dark
-  "#deebf7",
-  "#c6dbef",
-  "#9ecae1",
-  "#6baed6",
-  "#4292c6",
-  "#2171b5",
+  '#deebf7',
+  '#c6dbef',
+  '#9ecae1',
+  '#6baed6',
+  '#4292c6',
+  '#2171b5',
   {color: '#08519c', textColor: '#deebf7'},
-  {color: "#08306b", textColor: '#deebf7'}
+  {color: '#08306b', textColor: '#deebf7'}
 ];
 
 const domain = {
   min: -1,
   max: 1
-}
+};
 
 export default class EntityBubbleChart extends Component {
   formatData(entities) {
@@ -58,16 +58,20 @@ export default class EntityBubbleChart extends Component {
     const { entities } = this.props;
     const data = this.formatData(entities);
 
-    return <ReactBubbleChart
-      legend={false}
-      className="entity-bubble-chart"
-      colorLegend={legend}
-      data={data}
-      fixedDomain={domain}
-    />;
+    return (
+      <div className="entity-bubble-chart">
+        <ReactBubbleChart
+          legend={false}
+          className=""
+          colorLegend={legend}
+          data={data}
+          fixedDomain={domain}
+        />
+      </div>
+    );
   }
 }
 
 EntityBubbleChart.propTypes = {
   entities: PropTypes.array.isRequired
-}
+};

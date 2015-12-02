@@ -15,46 +15,12 @@
 //------------------------------------------------------------------------------
 
 import React, { Component, PropTypes } from 'react';
-import classNames        from 'classnames';
 import LineGraph         from './LineGraph';
 import Avatar            from './Avatar';
 import EntityBubbleChart from './EntityBubbleChart';
 import minusSvg          from '../svgs/minus.svg';
 
-const DRAW_TIME = 400;
-
 export default class Company extends Component {
-  render() {
-    const { symbol, description, data, strings, onClick, sentimentHistory,
-      onSelectDate, editing, entities } = this.props;
-    const myStockData = this.formatStockData();
-    const sentimentLoading = sentimentHistory === 'loading';
-    console.log(entities);
-
-    var series = 'symbol';
-    var mySentimentData = [];
-    if (!sentimentLoading) {
-      mySentimentData = this.formatSentimentData();
-    }
-
-    const loading = !data.length || sentimentLoading;
-    const change = data.length ? data[data.length - 1].change : null;
-    const last = data.length ? data[data.length - 1].last : null;
-
-    return (
-      <div className="company">
-        {editing ? <div className="remove"
-          dangerouslySetInnerHTML={{__html: minusSvg}}
-          onClick={this.props.onRemove}></div>
-        : null}
-        <Avatar symbol={symbol} description={description} change={change} last={last} loading={loading} onClick={onClick} />
-        {data.length ? <LineGraph stockData={myStockData} sentimentData={mySentimentData} onSelectDate={onSelectDate} />
-        : <span className="graph loading">{strings.loading}</span>}
-        {entities.length ? <EntityBubbleChart entities={entities} /> : null}
-      </div>
-    );
-  }
-
   formatStockData() {
     return this.props.data.map(d => ({
       symbol: this.props.symbol,
@@ -70,19 +36,60 @@ export default class Company extends Component {
       sentiment: d.sentiment
     }));
   }
+
+  render() {
+    const { symbol, description, data, onClick, sentimentHistory,
+      onSelectDate, editing, entities } = this.props;
+    const myStockData = this.formatStockData();
+    const sentimentLoading = sentimentHistory === 'loading';
+
+    var mySentimentData = [];
+    if (!sentimentLoading) {
+      mySentimentData = this.formatSentimentData();
+    }
+
+    const loading = !data.length || sentimentLoading;
+    const change = data.length ? data[data.length - 1].change : null;
+    const last = data.length ? data[data.length - 1].last : null;
+
+    // conditional components
+    const editBtn = editing ?
+      <div className="remove"
+        dangerouslySetInnerHTML={{__html: minusSvg}}
+        onClick={this.props.onRemove}>
+      </div> : null;
+    const graph = data.length ?
+      <LineGraph stockData={myStockData}
+        sentimentData={mySentimentData}
+        onSelectDate={onSelectDate} />
+      : null;
+    const bubbleChart = entities.length ?
+      <EntityBubbleChart entities={entities} />
+      : null;
+
+    return (
+      <div className="company">
+        {editBtn}
+        <Avatar symbol={symbol} description={description} change={change} last={last} loading={loading} onClick={onClick} />
+        {graph}
+        {bubbleChart}
+      </div>
+    );
+  }
 }
 
 Company.propTypes = {
   symbol: PropTypes.string.isRequired,
   description: PropTypes.string,
   data: PropTypes.array.isRequired,
-  strings: PropTypes.object.isRequired,
   editing: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  onSelectDate: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
   entities: PropTypes.array,
   sentimentHistory: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.array
   ]).isRequired
-}
+};

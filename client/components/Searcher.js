@@ -33,31 +33,22 @@ export default class Searcher extends Component {
     // this is necessary for document add/remove event listener to work properly
     this._handleClear = this.handleClear.bind(this);
   }
-  
+
   /**
-   * Where some of the magic happens.
-   * As the user's typing debounce a searchCompany call by 300ms.
+   * When mounting/unmounting set up the clear click handlers
    */
-  handleChange(event) {
-    var value = event.target.value;
-    this.setState({value: value});
-    if (!value) {
-      this.props.onClear();
-    }
-    this._searchTimeout && clearTimeout(this._searchTimeout);
-    this._searchTimeout = setTimeout(() => {
-      if (this.state.value.length > 1) {
-        this.props.onSearch(this.state.value);
-      }
-      delete this._searchTimeout;
-    }, 300);
+  componentDidMount() {
+    document.addEventListener('click', this._handleClear);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._handleClear);
   }
 
   /**
    * When focusing the input, if there are 2 or more characters and nothing in the drop down,
    * issue a searchCompany call
    */
-  handleFocus(event) {
+  handleFocus() {
     if (this.state.value.length > 1 && !this.props.potentialCompanies.length) {
       this.props.onSearch(this.state.value);
     }
@@ -85,6 +76,27 @@ export default class Searcher extends Component {
     this.props.onCompanyAdd(company);
     this.setState({value: ''});
     this.refs.input.getDOMNode().focus();
+  }
+
+  /**
+   * Where some of the magic happens.
+   * As the user's typing debounce a searchCompany call by 300ms.
+   */
+  handleChange(event) {
+    var value = event.target.value;
+    this.setState({value: value});
+    if (!value) {
+      this.props.onClear();
+    }
+    if (this._searchTimeout) {
+      clearTimeout(this._searchTimeout);
+    }
+    this._searchTimeout = setTimeout(() => {
+      if (this.state.value.length > 1) {
+        this.props.onSearch(this.state.value);
+      }
+      delete this._searchTimeout;
+    }, 300);
   }
 
   /**
@@ -136,16 +148,6 @@ export default class Searcher extends Component {
       </div>
     );
   }
-
-  /**
-   * When mounting/unmounting set up the clear click handlers
-   */
-  componentDidMount() {
-    document.addEventListener('click', this._handleClear);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('click', this._handleClear);
-  }
 }
 
 Searcher.propTypes = {
@@ -154,5 +156,6 @@ Searcher.propTypes = {
   loadingStatus: PropTypes.string.isRequired,
   onSearch: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
-  onCompanyAdd: PropTypes.func.isRequired
-}
+  onCompanyAdd: PropTypes.func.isRequired,
+  companies: PropTypes.array.isRequired
+};

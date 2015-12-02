@@ -14,7 +14,6 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import moment    from 'moment';
 import Constants from '../constants/Constants';
 
 /** Configure the companies either from the url or from local storage */
@@ -49,4 +48,4 @@ export default {
   stockData: {},
   sentimentHistory: {},
   entityHistory: {}
-}
+};

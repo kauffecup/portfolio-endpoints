@@ -44,11 +44,12 @@ class Companies extends Component {
 }
 
 Companies.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   strings: PropTypes.object.isRequired,
   companies: PropTypes.array.isRequired,
   editing: PropTypes.bool.isRequired,
   selectedDate: PropTypes.string.isRequired
-}
+};
 
 /**
  * Here we're gonna select what state we want for this container.
@@ -60,7 +61,7 @@ Companies.propTypes = {
 var select = state => {
   var myCompanies = [];
   state.companies.companies.map(c => {
-    let myC = clone(c);
+    const myC = clone(c);
     myC.data = state.stockData[c.symbol] || [];
     myC.sentimentHistory = state.sentimentHistory[c.symbol] || [];
     myC.selected = state.selectedCompany === c.symbol;
@@ -77,4 +78,4 @@ var select = state => {
 };
 
 // Wrap the component to inject dispatch and state into it
-export default connect(select)(Companies)
+export default connect(select)(Companies);
