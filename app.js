@@ -14,36 +14,29 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import keyMirror from 'keymirror';
+/** Module dependencies. */
+import express    from 'express';
+import bodyParser from 'body-parser';
+import logger     from 'morgan';
+import routes     from './routes';
 
-export default keyMirror({
-  COMPANY_LOCAL_STORAGE: null,
-  COMPANIES_LOADING: null,
-  COMPANY_DATA: null,
+const port = process.env.PORT || 3000;
 
-  ADD_COMPANY: null,
-  REMOVE_COMPANY: null,
-  SELECT_COMPANY: null,
-  DESELECT_COMPANY: null,
+// configure the express server
+const app = express();
+app.set('port', port);
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// enable CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+app.use('/', routes);
 
-  POTENTIAL_STATUS_CLEAR: null,
-  POTENTIAL_STATUS_LOADING: null,
-  POTENTIAL_STATUS_RECEIVED: null,
-  CLEAR_POTENTIAL_COMPANIES: null,
-
-  STOCK_PRICE_LOADING: null,
-  STOCK_PRICE_DATA: null,
-
-  STRING_DATA: null,
-
-  TWEETS_LOADING: null,
-  TWEETS_DATA: null,
-
-  SENTIMENT_HISTORY_LOADING: null,
-  SENTIMENT_HISTORY_DATA: null,
-
-  EDIT_ENTER: null,
-  EDIT_CANCEL: null,
-
-  SYMBOL_AND_DATE: null
+/** Start her up, boys */
+app.listen(app.get('port'), () => {
+  console.log('Express server listening on port ' + app.get('port'));
 });
