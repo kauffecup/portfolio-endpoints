@@ -74,7 +74,10 @@ router.get('/stocknews', (req, res) => {
 
 /* Stock Price. query takes symbols */
 router.get('/stockprice', (req, res) => {
-  const symbols = req.query.symbols;
+  let symbols = req.query.symbols;
+  if (typeof symbols !== 'string' && symbols.length) {
+    symbols = symbols.join(',');
+  }
 
   const {client_id: client_id1, url: url1} = vcapServices.stockPrice.credentials;
   const {client_id: client_id2, url: url2} = vcapServices.stockHistory.credentials;
@@ -132,8 +135,11 @@ router.get('/tweets', (req, res) => {
   const locales = new locale.Locales(req.headers['accept-language']);
   const langCode = req.query.language || locales.best(supportedLocales).code;
   // proceed with business as usual
-  const symbols = req.query.symbol || req.query.symbols;
   const entity = req.query.entity;
+  let symbols = req.query.symbol || req.query.symbols;
+  if (typeof symbols !== 'string' && symbols.length) {
+    symbols = symbols.join(',');
+  }
 
   // issue requests for the tweets and the sentiment
   const {client_id: client_id1, url: url1} = vcapServices.stockTweets.credentials;
