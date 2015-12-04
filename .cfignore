@@ -2,3 +2,5 @@
 config.json
 VCAP_SERVICES.json
 ENV_VARS.json
+.editorconfig
+.eslintrc

@@ -24,6 +24,7 @@
     "locale": "0.0.20",
     "moment": "^2.10.6",
     "morgan": "^1.6.1",
+    "object-assign": "^4.0.1",
     "request": "^2.61.0"
   },
   "engines": {

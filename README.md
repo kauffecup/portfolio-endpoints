@@ -1,4 +1,4 @@
-# Stock Insights
+# Portfolio Endpoints
 
 ## Initial Set Up
 
@@ -13,8 +13,8 @@
 
 ## Running Locally
 
-To run locally, create a `VCAP_SERVICES.json` file in the `server` directory
-that is identical to your deployed environment variables. For example:
+To run locally, create a `VCAP_SERVICES.json` file that is identical to your
+deployed environment variables. For example:
 
 ```json
 {
@@ -53,10 +53,5 @@ Then you only need to run:
 
 ```sh
 npm install
-npm run dev
+npm run start
 ```
-
-Running `npm run dev` adds the Webpack dev and hot middleware to the server.
-These are used to serve the bundle. It also handles rebuilding the bundle on js
-or css changes, and "hot reloading" them into your page. Access the server at
-localhost:3000
