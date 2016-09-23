@@ -59,7 +59,7 @@ for (const service in vcapServices) {
   } else if (service.indexOf('Stock Sentiment') > -1) {
     vcapServices.stockSentiment = vcapServices[service][0];
     delete vcapServices[service];
-  } else if (service.indexOf('gp-beta') > -1) {
+  } else if (service.indexOf('g11n-pipeline') > -1) {
     vcapServices.globalization = vcapServices[service][0];
   } else if (service.indexOf('Stock Tweets') > -1) {
     vcapServices.stockTweets = vcapServices[service][0];
